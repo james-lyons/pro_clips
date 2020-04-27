@@ -1,0 +1,21 @@
+{
+  "name": "pro_clips_back_end",
+  "author": "James Lyons",
+  "version": "1.0.0",
+  "license": "ISC",
+  "description": "Social Media site for storing gaming clips amongst competetive players",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express-session": "^1.17.1",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.10"
+  },
+  "devDependencies": {}
+}

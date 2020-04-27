@@ -8,6 +8,9 @@
 .AppleDouble
 .LSOverride
 
+# From App
+secret.js
+
 # Icon must end with two \r
 Icon
 
