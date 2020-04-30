@@ -4,8 +4,11 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// const routes = require('./routes');
+const routes = require('./routes');
 const secret = require('./secret');
+const multer = require('multer');
+const GridFsSTorage = require('multer-gridfs-storage');
+const Grid = require('gridfs-stream');
 
 
 // ------------------------------- Instanced Modules ------------------------------- //
