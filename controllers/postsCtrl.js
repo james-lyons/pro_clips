@@ -9,7 +9,7 @@ const indexPosts = (req, res) => {
 };
 
 const showPost = (req, res) => {
-    console.log('hi')
+    res.json({ file: req.file });
 };
 
 const createPost = (req, res) => {
