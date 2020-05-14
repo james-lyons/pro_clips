@@ -26,7 +26,7 @@ app.use(session({
 }));
 
 const corsOptions = {
-    origin: 'http:localhost:3000',
+    origin: 'http://localhost:8080',
     methods: ['GET', 'PUT', 'POST', 'HEAD', 'DELETE', 'OPTIONS'],
     headers: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
     credentials: true,
@@ -34,13 +34,15 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('http:localhost:3000', cors());
+app.options('http://localhost:8080', cors());
 
 // ------------------------------------- Routes ------------------------------------ //
 
 app.get('/', (req, res) => {
     res.send('<h1> Henlo </h1>');
 });
+
+app.use('/auth', routes.auth);
 
 // --------------------------------- Server Listener ------------------------------ //
 

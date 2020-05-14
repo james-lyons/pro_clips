@@ -9,6 +9,8 @@ const validateUser = require('../validation/userRegisteration');
 const register = (req, res) => {
     const { errors, notValid } = validateUser(req.body);
 
+    console.log('hello 1', req.body)
+
     if (notValid) {
         return res.status(400).json({
             status: 400,
@@ -16,53 +18,75 @@ const register = (req, res) => {
         });
     };
 
+    console.log('hello 2')
+
+
     db.User.findOne({ email: req.body.email }, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
             message: 'Something went wrong, please try again.'
         });
 
+        console.log('hello 3')
+
+
         if (foundUser) return res.status(400).json({
             status: 400,
             message: 'Email or Username already registered.'
         });
 
-        db.User.findOne({ userName: req.body.username }, (err, foundUser) => {
+        console.log('hello 4')
+
+
+        db.User.findOne({ userName: req.body.userName }, (err, foundUser) => {
             if (err) return res.status(500).json({
                 status: 500,
                 message: 'Something went wrong, please try again.'
             });
+
+            console.log('hello 5')
+
     
             if (foundUser) return res.status(400).json({
                 status: 400,
                 message: 'Email or Username already registered.'
             });
 
+            console.log('hello 6')
+
             bcrypt.genSalt(10,(err, salt) => {
                 if (err) return res.status(500).json({
                     status: 500,
                     message: 'Something went wrong, please try again.'
                 });
+
+                console.log('hello 7')
+
     
                 bcrypt.hash(req.body.password, salt, (err, hash) => {
                     if (err) return res.status(500).json({
                         status: 500,
                         message: 'Something went wrong, please try again.'
                     });
+
+                    console.log('hello 8')
     
                     const newUser = {
                         userName: req.body.userName,
                         email: req.body.email,
-                        profile_image: req.body.profile_image,
                         password: hash,
                         password2: hash
                     };
+
+                    console.log('hello 9', newUser)
     
                     db.User.create(newUser, (err, savedUser) => {
                         if (err) return res.status(500).json({
                             status: 500,
                             message: 'Something went wrong, please try again.'
                         });
+
+                        console.log('hello 10')
     
                         res.status(201).json({
                             status: 201,
