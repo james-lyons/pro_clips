@@ -14,12 +14,12 @@ const register = (req, res) => {
     if (notValid) {
         return res.status(400).json({
             status: 400,
-            errors
+            errors,
+            message: 'Please enter all fields'
         });
     };
 
     console.log('hello 2')
-
 
     db.User.findOne({ email: req.body.email }, (err, foundUser) => {
         if (err) return res.status(500).json({
@@ -29,14 +29,13 @@ const register = (req, res) => {
 
         console.log('hello 3')
 
-
         if (foundUser) return res.status(400).json({
             status: 400,
-            message: 'Email or Username already registered.'
+            errors: [{ message: 'Username or Email already registered' }],
+            message: 'Please try again.'
         });
 
         console.log('hello 4')
-
 
         db.User.findOne({ userName: req.body.userName }, (err, foundUser) => {
             if (err) return res.status(500).json({
@@ -46,7 +45,6 @@ const register = (req, res) => {
 
             console.log('hello 5')
 
-    
             if (foundUser) return res.status(400).json({
                 status: 400,
                 message: 'Email or Username already registered.'
@@ -61,7 +59,6 @@ const register = (req, res) => {
                 });
 
                 console.log('hello 7')
-
     
                 bcrypt.hash(req.body.password, salt, (err, hash) => {
                     if (err) return res.status(500).json({
@@ -90,7 +87,7 @@ const register = (req, res) => {
     
                         res.status(201).json({
                             status: 201,
-                            message: 'Successfully created new user.',
+                            message: 'Thanks for signing up!',
                             data: newUser
                         });
                     });
@@ -104,9 +101,12 @@ const login = (req, res) => {
     if (!req.body.email || !req.body.password) {
         return res.status(200).json({
             status: 400,
-            message: 'Please enter your email and password.'
+            errors: [{ message: 'Please enter your email and password'}],
+            message: 'Please try again.'
         });
     };
+
+    console.log('hello 1')
 
     db.User.findOne({ email: req.body.email }, (err, foundUser) => {
         if (err) return res.status(500).json({
@@ -114,10 +114,15 @@ const login = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
+        console.log('hello 2')
+
         if (!foundUser) return res.status(400).json({
             status: 400,
-            message: 'Email of password is incorrect'
+            errors: [{ message: 'Email or Password is incorrect'}],
+            message: 'Please try again.'
         });
+
+        console.log('hello 3')
 
         bcrypt.compare( req.body.password, foundUser.password, (err, isMatch) => {
             if (err) return res.status(500).json({
@@ -125,17 +130,27 @@ const login = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
+            console.log('hello 4')
+
             if (isMatch) {
                 req.session.currentUser = { _id: foundUser._id, userName: foundUser.userName };
+                console.log('hello 5');
+                console.log(req.session.currentUser);
+
                 return res.status(200).json({
                     status: 200,
                     message: 'Successfully logged in.',
                     data: foundUser
                 });
+
             } else {
+                console.log('hello 6')
+                console.log(err, isMatch)
+
                 return res.status(400).json({
                     status: 400,
-                    message: 'Email or password is incorrect.'
+                    errors: [{ message: 'Email or Password is incorrect'}],
+                    message: 'Please try again.'
                 });
             };
         });
@@ -148,7 +163,11 @@ const logout = (req, res) => {
             status: 500,
             message: 'Something went wrong, please try again.'
         });
-        res.sendStatus(200);
+
+        return res.status(200).json({
+            status: 200,
+            message: 'Successfully logged out.'
+        });
     });
 };
 

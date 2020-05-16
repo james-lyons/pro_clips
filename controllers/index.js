@@ -3,5 +3,5 @@ module.exports = {
     accounts: require('./accountsCtrl'),
     posts: require('./postsCtrl'),
     comments: require('./commentsCtrl'),
-    friends: require('./FriendsCtrl')
+    followers: require('./FollowersCtrl')
 };

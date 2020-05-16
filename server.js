@@ -17,8 +17,8 @@ const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
 
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
     secret: secret,
     resave: false,

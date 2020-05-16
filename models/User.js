@@ -15,6 +15,10 @@ const userSchema = new Schema({
         required: true,
         default: 'https://www.sackettwaconia.com/wp-content/uploads/default-profile.png'
     },
+    bio: {
+        type: String,
+        required: false
+    },
     posts: [{
         type: Schema.Types.ObjectId,
         ref: 'Posts',
@@ -25,9 +29,13 @@ const userSchema = new Schema({
         ref: 'Comments',
         required: false
     }],
-    friends: [{
+    following: [{
         type: Schema.Types.ObjectId,
-        ref: 'Friends'
+        ref: 'Following'
+    }],
+    followers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Followers'
     }],
     password: {
         type: String,

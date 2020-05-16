@@ -16,5 +16,5 @@ module.exports = {
     User: require('./User'),
     Post: require('./Post'),
     Comment: require('./Comment'),
-    Friend: require('./Friend')
+    Followers: require('./Followers')
 };
