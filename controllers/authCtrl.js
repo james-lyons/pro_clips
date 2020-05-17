@@ -137,6 +137,8 @@ const login = (req, res) => {
                 console.log('hello 5');
                 console.log(req.session.currentUser);
 
+                console.log(req.session)
+
                 return res.status(200).json({
                     status: 200,
                     message: 'Successfully logged in.',

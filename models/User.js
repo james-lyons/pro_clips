@@ -17,6 +17,7 @@ const userSchema = new Schema({
     },
     bio: {
         type: String,
+        default: 'Bio',
         required: false
     },
     posts: [{
