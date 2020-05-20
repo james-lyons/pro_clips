@@ -6,7 +6,7 @@ const db = require('../models');
 // ----------------------- Controllers ----------------------- //
 
 const fetchUsers = (req, res) => {
-    console.log(req);
+    // console.log(req);
 
     db.User.find({}, (err, foundUsers) => {
         if (err) return res.status(500).json({
@@ -15,7 +15,7 @@ const fetchUsers = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        console.log('hello 1');
+        // console.log('hello 1');
 
         res.status(200).json({
             status: 200,
@@ -33,7 +33,7 @@ const fetchUser = (req, res) => {
 
         if (err) return res.status(500).json({
             status: 500,
-            error: { err },
+            error: err,
             message: 'Something went wrong, please try again.'
         });
 
@@ -49,6 +49,7 @@ const fetchUser = (req, res) => {
 };
 
 const editUserProfile = (req,res) => {
+    console.log(req.body)
     db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (err, updatedUser) => {
         console.log('hello 1', req.body);
 
@@ -89,7 +90,7 @@ const editUserPassword = (req, res) => {
     if (Boolean(errors.length)) {
         return res.status(400).json({
             status: 400,
-            errors,
+            errors: errors,
             message: 'Please check all fields.'
         });
     };
@@ -149,10 +150,47 @@ const editUserPassword = (req, res) => {
             } else {
                 return res.status(400).json({
                     status: 400,
-                    errors: { error: 'Password is incorrect. '},
+                    errors: [{ message: 'Password is incorrect. '}],
                     message: 'Please try again.'
                 });
             };
+        });
+    });
+};
+
+const editUserEmail = (req, res) => {
+    console.log('hello 1', req.body);
+    db.User.findOne({ email: req.body.email }, (err, foundUser) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        console.log('hello 2', req.session);
+
+        if (foundUser) return res.status(400).json({
+            status: 400,
+            errors: [{ message: 'Email already registered' }],
+            message: 'Please try again.'
+        });
+
+        db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (err, updatedUser) => {
+            console.log('hello 3', req.body);
+    
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+    
+            console.log('hello 4')
+    
+            res.status(202).json({
+                status: 202,
+                message: 'Successfully edited user profile',
+                data: updatedUser
+            });
         });
     });
 };
@@ -178,6 +216,7 @@ module.exports = {
     fetchUsers,
     fetchUser,
     editUserProfile,
+    editUserEmail,
     editUserPassword,
     deleteUser
 };

@@ -7,6 +7,7 @@ router.get('/', ctrls.accounts.fetchUsers);
 router.get('/:id', authRequired, ctrls.accounts.fetchUser);
 router.put('/:id/profile', authRequired, ctrls.accounts.editUserProfile);
 router.put('/:id/password', authRequired, ctrls.accounts.editUserPassword);
+router.put('/:id/email', authRequired, ctrls.accounts.editUserEmail);
 router.delete('/:id', authRequired, ctrls.accounts.deleteUser);
 
 module.exports = router;
