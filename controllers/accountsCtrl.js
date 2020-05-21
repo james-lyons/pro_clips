@@ -25,8 +25,8 @@ const fetchUsers = (req, res) => {
     });
 };
 
-const fetchUser = (req, res) => {
-    console.log(req.session);
+const fetchCurrentUser = (req, res) => {
+    console.log(req.body);
     db.User.findById(req.session.currentUser._id, (err, foundUser) => {
 
         console.log('error:', err);
@@ -48,10 +48,13 @@ const fetchUser = (req, res) => {
     });
 };
 
-const editUserProfile = (req,res) => {
-    console.log(req.body)
-    db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (err, updatedUser) => {
-        console.log('hello 1', req.body);
+const fetchUser = (req, res) => {
+    console.log('body', req.body);
+    console.log('params', req.params)
+
+    db.User.findOne(req.body.userName, (err, foundUser) => {
+
+        console.log('error:', err);
 
         if (err) return res.status(500).json({
             status: 500,
@@ -59,12 +62,57 @@ const editUserProfile = (req,res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        console.log('hello 2')
+        const userData = {
+            bio: foundUser.bio,
+            userName: foundUser.userName,
+            posts: foundUser.posts,
+            following: foundUser.following,
+            followers: foundUser.followers
+        };
 
-        res.status(202).json({
-            status: 202,
-            message: 'Successfully edited user profile',
-            data: updatedUser
+        console.log('Hello 1');
+        console.log('founder user:', foundUser)
+
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully found user.',
+            data: userData
+        });
+    });
+};
+
+const editUserProfile = (req,res) => {
+    console.log(req.body);
+
+    db.User.findOne({ userName: req.body.userName }, (err, foundUser) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        if (foundUser) return res.status(400).json({
+            status: 400,
+            errors: [{ message: 'Username already registered' }],
+            message: 'Please try again.'
+        });
+        
+        db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (err, updatedUser) => {
+            console.log('hello 1', req.body);
+    
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+    
+            console.log('hello 2')
+    
+            res.status(202).json({
+                status: 202,
+                message: 'Successfully edited user profile',
+                data: updatedUser
+            });
         });
     });
 };
@@ -214,6 +262,7 @@ const deleteUser = (req, res) => {
 
 module.exports = {
     fetchUsers,
+    fetchCurrentUser,
     fetchUser,
     editUserProfile,
     editUserEmail,
