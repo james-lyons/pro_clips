@@ -65,6 +65,7 @@ const fetchUser = (req, res) => {
         const userData = {
             bio: foundUser.bio,
             userName: foundUser.userName,
+            profile_image: foundUser.profile_image,
             posts: foundUser.posts,
             following: foundUser.following,
             followers: foundUser.followers
