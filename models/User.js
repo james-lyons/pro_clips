@@ -32,11 +32,11 @@ const userSchema = new Schema({
     }],
     following: [{
         type: Schema.Types.ObjectId,
-        ref: 'Following'
+        ref: 'User'
     }],
     followers: [{
         type: Schema.Types.ObjectId,
-        ref: 'Followers'
+        ref: 'User'
     }],
     password: {
         type: String,

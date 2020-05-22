@@ -38,7 +38,7 @@ const fetchCurrentUser = (req, res) => {
         });
 
         console.log('Hello 1');
-        console.log('founder user:', foundUser)
+        console.log('found user 1:', foundUser)
 
         res.status(200).json({
             status: 200,
@@ -50,16 +50,23 @@ const fetchCurrentUser = (req, res) => {
 
 const fetchUser = (req, res) => {
     console.log('body', req.body);
-    console.log('params', req.params)
+    console.log('params', req.params);
 
-    db.User.findOne(req.body.userName, (err, foundUser) => {
+    db.User.findOne({ userName: req.params.userName }, (err, foundUser) => {
 
         console.log('error:', err);
+        console.log('found user 2:', foundUser)
 
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again.'
+        });
+
+        if (!foundUser) return res.status(400).json({
+            status: 400,
+            error: [{ error: 'No user by that name.' }],
+            message: 'Please try again.'
         });
 
         const userData = {
@@ -71,8 +78,7 @@ const fetchUser = (req, res) => {
             followers: foundUser.followers
         };
 
-        console.log('Hello 1');
-        console.log('founder user:', foundUser)
+        console.log('Hello 3', userData)
 
         res.status(200).json({
             status: 200,
