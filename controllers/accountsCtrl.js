@@ -69,22 +69,76 @@ const fetchUser = (req, res) => {
             message: 'Please try again.'
         });
 
-        const userData = {
-            bio: foundUser.bio,
-            userName: foundUser.userName,
-            profile_image: foundUser.profile_image,
-            posts: foundUser.posts,
-            following: foundUser.following,
-            followers: foundUser.followers
+        console.log(req.session.currentUser);
+
+        if (req.session.currentUser._id) {
+            db.User.findById(req.session.currentUser._id, (err, foundCurrentUser) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
+
+                if (foundCurrentUser.following.includes(foundUser._id.toString())) {
+
+                    const userData = {
+                        bio: foundUser.bio,
+                        userName: foundUser.userName,
+                        profile_image: foundUser.profile_image,
+                        posts: foundUser.posts,
+                        following: foundUser.following,
+                        followers: foundUser.followers,
+                        isFollowed: true
+                    };
+            
+                    console.log('Hello 3', userData)
+            
+                    return res.status(200).json({
+                        status: 200,
+                        message: 'Successfully found user.',
+                        data: userData
+                    });
+
+                } else {
+                    const userData = {
+                        bio: foundUser.bio,
+                        userName: foundUser.userName,
+                        profile_image: foundUser.profile_image,
+                        posts: foundUser.posts,
+                        following: foundUser.following,
+                        followers: foundUser.followers,
+                        isFollowed: false
+                    };
+    
+                    console.log('Hello 4', userData)
+    
+                    return res.status(200).json({
+                        status: 200,
+                        message: 'Successfully found user.',
+                        data: userData
+                    }); 
+                }; 
+            });
+            
+        } else {
+            const userData = {
+                bio: foundUser.bio,
+                userName: foundUser.userName,
+                profile_image: foundUser.profile_image,
+                posts: foundUser.posts,
+                following: foundUser.following,
+                followers: foundUser.followers,
+                isFollowed: false
+            };
+    
+            console.log('Hello 5', userData)
+    
+            return res.status(200).json({
+                status: 200,
+                message: 'Successfully found user.',
+                data: userData
+            });
         };
-
-        console.log('Hello 3', userData)
-
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully found user.',
-            data: userData
-        });
     });
 };
 

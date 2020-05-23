@@ -42,6 +42,7 @@ const followUser = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
             });
+
             foundCurrentUser.save((err) => {
                 if (err) return res.status(500).json({
                     status: 500,
@@ -49,9 +50,13 @@ const followUser = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
 
+                console.log('FOLLOW USER 6', foundUser.followers);
+
+
                 return res.status(200).json({
                     status: 200,
-                    message: 'Success!'
+                    message: 'Success!',
+                    data: foundUser
                 });
             });
         });
@@ -109,9 +114,12 @@ const unfollowUser = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
 
+                console.log('UNFOLLOW USER 5', foundUser.followers);
+
                 return res.status(200).json({
                     status: 200,
-                    message: 'Success!'
+                    message: 'Success!',
+                    data: foundUser
                 });
             });
         });
