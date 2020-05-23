@@ -69,9 +69,10 @@ const fetchUser = (req, res) => {
             message: 'Please try again.'
         });
 
-        console.log(req.session.currentUser);
+        console.log('req session', req.session.currentUser);
 
-        if (req.session.currentUser._id) {
+        if (req.session.currentUser) {
+            console.log('herroder')
             db.User.findById(req.session.currentUser._id, (err, foundCurrentUser) => {
                 if (err) return res.status(500).json({
                     status: 500,
@@ -158,7 +159,7 @@ const editUserProfile = (req,res) => {
             message: 'Please try again.'
         });
         
-        db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (err, updatedUser) => {
+        db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (err, foundUser) => {
             console.log('hello 1', req.body);
     
             if (err) return res.status(500).json({
@@ -167,7 +168,19 @@ const editUserProfile = (req,res) => {
                 message: 'Something went wrong, please try again.'
             });
     
-            console.log('hello 2')
+            console.log('hello 2', foundUser);
+            const updatedUser = foundUser;
+
+            if (req.body.bio && req.body.userName) {
+                updatedUser.bio = req.body.bio;
+                updatedUser.userName = req.body.userName
+            } else if (req.body.bio) {
+                updatedUser.bio = req.body.bio;
+            } else {
+                updatedUser.userName = req.body.userName
+            };
+
+            console.log('updateduser', updatedUser)
     
             res.status(202).json({
                 status: 202,
