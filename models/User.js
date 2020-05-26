@@ -20,9 +20,9 @@ const userSchema = new Schema({
         default: 'Bio',
         required: false
     },
-    posts: [{
+    clips: [{
         type: Schema.Types.ObjectId,
-        ref: 'Posts',
+        ref: 'Clip',
         required: false
     }],
     comments: [{

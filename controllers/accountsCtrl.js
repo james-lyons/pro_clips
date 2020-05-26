@@ -86,7 +86,7 @@ const fetchUser = (req, res) => {
                         bio: foundUser.bio,
                         userName: foundUser.userName,
                         profile_image: foundUser.profile_image,
-                        posts: foundUser.posts,
+                        clips: foundUser.clips,
                         following: foundUser.following,
                         followers: foundUser.followers,
                         isFollowed: true
@@ -105,7 +105,7 @@ const fetchUser = (req, res) => {
                         bio: foundUser.bio,
                         userName: foundUser.userName,
                         profile_image: foundUser.profile_image,
-                        posts: foundUser.posts,
+                        clips: foundUser.clips,
                         following: foundUser.following,
                         followers: foundUser.followers,
                         isFollowed: false
@@ -126,7 +126,7 @@ const fetchUser = (req, res) => {
                 bio: foundUser.bio,
                 userName: foundUser.userName,
                 profile_image: foundUser.profile_image,
-                posts: foundUser.posts,
+                clips: foundUser.clips,
                 following: foundUser.following,
                 followers: foundUser.followers,
                 isFollowed: false

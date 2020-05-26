@@ -45,6 +45,7 @@ app.get('/', (req, res) => {
 app.use('/auth', routes.auth);
 app.use('/accounts', routes.accounts);
 app.use('/follow', routes.follow);
+app.use('/clips', routes.clips);
 
 
 // --------------------------------- Server Listener ------------------------------ //

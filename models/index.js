@@ -12,9 +12,8 @@ mongoose.connect(MONGO_URL, {
     .catch((err) => console.log(err));
 
 module.exports = {
-    MONGO_URL,
     User: require('./User'),
-    Post: require('./Post'),
+    Clip: require('./Clip'),
     Comment: require('./Comment'),
     Followers: require('./Followers')
 };

@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const postSchema = new Schema({
+const clipSchema = new Schema({
     poster: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    postTitle: {
+    title: {
         type: String,
         required: true
+    },
+    clip: {
+        type: Object,
+        require: true
     },
     comments: {
         type: Schema.Types.ObjectId,
@@ -16,6 +20,6 @@ const postSchema = new Schema({
     }
 });
 
-const Post = mongoose.model('Post', postSchema);
+const Clip = mongoose.model('Clip', clipSchema);
 
-module.exports = Post;
+module.exports = Clip;
