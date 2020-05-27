@@ -9,7 +9,7 @@
 .LSOverride
 
 # From App
-secret.js
+.env
 
 # Icon must end with two \r
 Icon

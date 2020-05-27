@@ -5,7 +5,9 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const routes = require('./routes');
-const secret = require('./secret');
+require('dotenv').config();
+
+console.log(process.env.AWS_BUCKET_NAME);
 
 // ------------------------------- Instanced Modules ------------------------------- //
 
@@ -20,7 +22,7 @@ const PORT = process.env.PORT || 4000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
-    secret: secret,
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false
 }));
