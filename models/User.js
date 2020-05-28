@@ -27,17 +27,11 @@ const userSchema = new Schema({
     }],
     comments: [{
         type: Schema.Types.ObjectId,
-        ref: 'Comments',
+        ref: 'Comment',
         required: false
     }],
-    following: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    followers: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }],
+    following: [],
+    followers: [],
     password: {
         type: String,
         required: true

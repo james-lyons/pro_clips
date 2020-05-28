@@ -10,9 +10,9 @@ const clipSchema = new Schema({
         type: String,
         required: true
     },
-    clip: {
-        type: Object,
-        require: true
+    url: {
+        type: String,
+        required: true
     },
     comments: {
         type: Schema.Types.ObjectId,

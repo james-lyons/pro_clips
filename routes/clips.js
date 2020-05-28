@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const ctrls = require('../controllers');
 const authRequired = require('../middleware/authRequired');
-const clip = require('../middleware/gridFs');
+const upload = require('../middleware/multer');
 
 router.get('/', ctrls.clips.indexClips);
-router.get('/clip/:filename', ctrls.clips.streamClip);
-router.get('/:id', ctrls.clips.showClip);
-router.post('/', authRequired, clip.single('clip'), ctrls.clips.createClip);
+router.get('/clips/:userId', ctrls.clips.indexUserClips);
+router.get('/clip/:id', ctrls.clips.showClip);
+router.post('/', authRequired, upload.single('clip'), ctrls.clips.uploadClip);
 // router.put('/:id', authRequired, ctrls.clips.editClip);
 // router.delete('/:id', authRequired, ctrls.clips.deleteClip);
 

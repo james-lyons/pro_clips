@@ -125,7 +125,6 @@ const login = (req, res) => {
         });
 
         console.log('hello 3')
-        console.log(req.body.password, foundUser.password)
 
         bcrypt.compare(req.body.password, foundUser.password, (err, isMatch) => {
             if (err) return res.status(500).json({
