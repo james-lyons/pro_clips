@@ -12,20 +12,23 @@ const indexClips = (req, res) => {
 };
 
 const indexUserClips = (req, res) => {
-    db.User.findById(req.session.currentUser._id, (err, foundUser) => {
+    console.log('HELLO FROM INDEXUSERCLIPS 1: params -', req.params);
+    db.User.findOne({ userName: req.params.username }, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again.'
         });
-
-        db.Clip.find({ poster: req.session.currentUser }, (err, foundClips) => {
+        
+        db.Clip.find({ poster: foundUser._id }, (err, foundClips) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
 
+            console.log('HELLO FROM INDEXUSERCLIPS 2: foundClips -', foundClips);
+    
             return res.status(200).json({
                 status: 200,
                 message: 'Success.',

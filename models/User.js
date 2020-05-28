@@ -21,17 +21,21 @@ const userSchema = new Schema({
         required: false
     },
     clips: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Clip',
-        required: false
+        type: Schema.Types.ObjectId
     }],
     comments: [{
         type: Schema.Types.ObjectId,
-        ref: 'Comment',
+        ref: 'Comments',
         required: false
     }],
-    following: [],
-    followers: [],
+    following: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    followers: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     password: {
         type: String,
         required: true
