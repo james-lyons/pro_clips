@@ -10,6 +10,10 @@ const clipSchema = new Schema({
         type: String,
         required: true
     },
+    key: {
+        type: String,
+        required: true
+    },
     url: {
         type: String,
         required: true

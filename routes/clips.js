@@ -8,7 +8,7 @@ router.get('/', ctrls.clips.indexClips);
 router.get('/clips/:username', ctrls.clips.indexUserClips);
 router.get('/clip/:id', ctrls.clips.showClip);
 router.post('/', authRequired, upload.single('clip'), ctrls.clips.uploadClip);
-// router.put('/:id', authRequired, ctrls.clips.editClip);
-// router.delete('/:id', authRequired, ctrls.clips.deleteClip);
+router.put('/:id', authRequired, ctrls.clips.editClip);
+router.delete('/:id', authRequired, ctrls.clips.deleteClip);
 
 module.exports = router;

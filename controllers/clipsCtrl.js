@@ -107,11 +107,11 @@ const uploadClip = (req, res) => {
         let newClip = {
             poster: foundUser._id,
             title: title,
+            key: newKey,
             url: newUrl
         };
 
         console.log('HELLO FROM CLIPS 7: newClip -', newClip);
-
 
         db.Clip.create(newClip, (err, createdClip) => {
             if (err) return res.status(500).json({
@@ -133,11 +133,56 @@ const uploadClip = (req, res) => {
 };
 
 const editClip = (req, res) => {
-    console.log('hi');
+    console.log('HELLO FROM EDIT CLIP 1', req.body);
 };
 
 const deleteClip = (req, res) => {
-    console.log('hi');
+    console.log('HELLO FROM DELETE CLIP 1');
+
+    db.Clip.findByIdAndDelete(req.params.id, (err, deletedClip) => {
+
+        console.log('HELLO FROM DELETE CLIP 2: deleteclip - ', deletedClip);
+
+        db.User.findById(req.session.currentUser._id, (err, foundUser) => {
+            const newClipList = foundUser.clips.filter(clip => clip.toString() !== req.params.id);
+            foundUser.clips = newClipList;
+            foundUser.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
+            });
+        });
+
+        let s3bucket = new aws.S3({
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            region: process.env.AWS_REGION
+        });
+
+        console.log('HELLO FROM DELETE CLIP 3: s3bucket - ', s3bucket);
+      
+        let params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: deletedClip.key
+        };
+        
+        console.log('HELLO FROM DELETE CLIP 4: params - ', params);
+    
+        s3bucket.deleteObject(params, (err, data) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+
+            return res.status(200).json({
+                status: 200,
+                message: 'Success'
+            });
+        });
+    });
 };
 
 module.exports = {
