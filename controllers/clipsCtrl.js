@@ -133,7 +133,27 @@ const uploadClip = (req, res) => {
 };
 
 const editClip = (req, res) => {
-    console.log('HELLO FROM EDIT CLIP 1', req.body);
+    console.log('HELLO FROM EDIT CLIP 1a', req.body);
+    console.log('HELLO FROM EDIT CLIP 1b', req.params);
+
+    db.Clip.findByIdAndUpdate(req.params.id, req.body, (error, foundClip) => {
+        if (error) return res.status(500).json({
+            status: 500,
+            message: 'Something went wrong, please try again.',
+            error
+        });
+
+        console.log('HELLO FROM EDIT CLIP 2', foundClip);
+        
+        const updatedClip = foundClip;
+        updatedClip.title = req.body.title;
+
+        return res.status(200).json({
+            status: 200,
+            message: 'Success',
+            data: updatedClip
+        });
+    });
 };
 
 const deleteClip = (req, res) => {
