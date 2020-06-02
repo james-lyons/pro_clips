@@ -108,7 +108,8 @@ const uploadClip = (req, res) => {
             poster: foundUser._id,
             title: title,
             key: newKey,
-            url: newUrl
+            url: newUrl,
+            game: req.body.game
         };
 
         console.log('HELLO FROM CLIPS 7: newClip -', newClip);
@@ -144,7 +145,6 @@ const editClip = (req, res) => {
         });
 
         console.log('HELLO FROM EDIT CLIP 2', foundClip);
-        
         const updatedClip = foundClip;
         updatedClip.title = req.body.title;
 
