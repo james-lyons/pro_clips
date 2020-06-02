@@ -38,6 +38,92 @@ const indexUserClips = (req, res) => {
     });
 };
 
+const indexBrowseClips = async (req, res) => {
+    let ApexLegends;
+    let CODWarzone;
+    let LeagueOfLegends;
+    let Valorant;
+    let Fortnite;
+
+    console.log('HELL FROM INDEXBROWSECLIPS 0: clips')
+
+    await db.Clip.find({"game": "Apex Legends"}, (err, foundClips) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        ApexLegends = foundClips;
+        console.log('HELL FROM INDEXBROWSECLIPS 1: Apex', ApexLegends)
+
+    }).limit(3);
+
+    await db.Clip.find({"game": "C.O.D. Warzone"}, (err, foundClips) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        CODWarzone = foundClips;
+        console.log('HELL FROM INDEXBROWSECLIPS 3: CODWarzone', CODWarzone)
+
+    }).limit(3);
+
+    await db.Clip.find({"game": "League of Legends"}, (err, foundClips) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        LeagueOfLegends = foundClips;
+        console.log('HELL FROM INDEXBROWSECLIPS 4: LeagueOfLegends', LeagueOfLegends)
+
+    }).limit(3);
+
+    await db.Clip.find({"game": "Valorant"}, (err, foundClips) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        Valorant = foundClips;
+        console.log('HELL FROM INDEXBROWSECLIPS 5: clips', Valorant)
+
+    }).limit(3);
+
+    await db.Clip.find({"game": "Fortnite"}, (err, foundClips) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        Fortnite = foundClips;
+        console.log('HELL FROM INDEXBROWSECLIPS 6: clips', Fortnite)
+
+    }).limit(3);
+
+    let browsedClips = {
+        ApexLegends,
+        CODWarzone,
+        LeagueOfLegends,
+        Valorant,
+        Fortnite,
+    };
+
+    // console.log('HELL FROM INDEXBROWSECLIPS 7: browsedClips', browsedClips)
+
+    return res.status(200).json({
+        status: 200,
+        message: 'Success',
+        data: browsedClips
+    });
+};
+
 const showClip = (req, res) => {
     // res.json({ file: req.file });
     console.log('HELLO FROM SHOWCLIP 1:', req.params.id)
@@ -208,6 +294,7 @@ const deleteClip = (req, res) => {
 module.exports = {
     indexClips,
     indexUserClips,
+    indexBrowseClips,
     showClip,
     uploadClip,
     editClip,
