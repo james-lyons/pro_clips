@@ -45,6 +45,8 @@ app.get('/', (req, res) => {
 app.use('/auth', routes.auth);
 app.use('/accounts', routes.accounts);
 app.use('/follow', routes.follow);
+app.use('/comments', routes.comments);
+app.use('/replies', routes.replies);
 app.use('/clips', routes.clips);
 
 

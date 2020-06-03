@@ -4,30 +4,30 @@ const db = require('../models');
 
 // ----------------------- Controllers ----------------------- //
 
-const indexComments = (req, res) => {
-    db.Comment.find({})
+const indexReplies = (req, res) => {
+    db.Reply.find({})
 };
 
-const showComment = (req, res) => {
+const showReply = (req, res) => {
     console.log('hi')
 };
 
-const createComment = (req, res) => {
+const createReply = (req, res) => {
     console.log('hi');
 };
 
-const editComment = (req, res) => {
+const editReply = (req, res) => {
     console.log('hi');
 };
 
-const deleteComment = (req, res) => {
+const deleteReply = (req, res) => {
     console.log('hi');
 };
 
 module.exports = {
-    indexComments,
-    showComment,
-    createComment,
-    editComment,
-    deleteComment
+    indexReplies,
+    showReply,
+    createReply,
+    editReply,
+    deleteReply
 };

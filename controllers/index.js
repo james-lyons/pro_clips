@@ -1,7 +1,8 @@
 module.exports = {
     auth: require('./authCtrl'),
     accounts: require('./accountsCtrl'),
-    clips: require('./clipsCtrl'),
+    follow: require('./FollowCtrl'),
     comments: require('./commentsCtrl'),
-    followers: require('./FollowersCtrl')
+    replies: require('./repliesCtrl'),
+    clips: require('./clipsCtrl')
 };
