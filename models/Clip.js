@@ -25,6 +25,10 @@ const clipSchema = new Schema({
     comments: {
         type: Schema.Types.ObjectId,
         ref: 'Comments'
+    },
+    timeStamp: {
+        type: Date,
+        default: Date.now
     }
 });
 

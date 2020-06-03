@@ -1,32 +1,26 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Reply = require('./Reply');
 
-const commentSchema = new Schema({
+const replySchema = new Schema({
     author_name: {
         type: String,
         required: true
     },
-    commentText: {
+    replyText: {
         type: String,
+        required: true
     },
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    post: {
-        type: Schema.Types.ObjectId,
-        ref: 'Post',
-        required: true
-    },
-    replies: [ Reply.schema ],
     timeStamp: {
         type: Date,
         default: Date.now
     }
 });
 
-const Comment = mongoose.model('Comment', commentSchema);
+const Reply = mongoose.model('Reply', replySchema);
 
-module.exports = Comment;
+module.exports = Reply;

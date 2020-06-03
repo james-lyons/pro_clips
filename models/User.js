@@ -25,7 +25,12 @@ const userSchema = new Schema({
     }],
     comments: [{
         type: Schema.Types.ObjectId,
-        ref: 'Comments',
+        ref: 'Comment',
+        required: false
+    }],
+    replies: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Reply',
         required: false
     }],
     following: [{

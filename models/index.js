@@ -13,7 +13,8 @@ mongoose.connect(MONGO_URL, {
 
 module.exports = {
     User: require('./User'),
-    Clip: require('./Clip'),
+    Followers: require('./Followers'),
     Comment: require('./Comment'),
-    Followers: require('./Followers')
+    Reply: require('./Reply'),
+    Clip: require('./Clip')
 };
