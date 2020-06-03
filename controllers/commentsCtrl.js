@@ -24,10 +24,35 @@ const deleteComment = (req, res) => {
     console.log('hi');
 };
 
+const indexResponses = (req, res) => {
+    db.Response.find({})
+};
+
+const showResponse = (req, res) => {
+    console.log('hi')
+};
+
+const createResponse = (req, res) => {
+    console.log('hi');
+};
+
+const editResponse = (req, res) => {
+    console.log('hi');
+};
+
+const deleteResponse = (req, res) => {
+    console.log('hi');
+};
+
 module.exports = {
     indexComments,
     showComment,
     createComment,
     editComment,
-    deleteComment
+    deleteComment,
+    indexResponses,
+    showResponse,
+    createResponse,
+    editResponse,
+    deleteResponse
 };
