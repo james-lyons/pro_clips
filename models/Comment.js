@@ -15,9 +15,9 @@ const commentSchema = new Schema({
         ref: 'User',
         required: true
     },
-    post: {
+    clip: {
         type: Schema.Types.ObjectId,
-        ref: 'Post',
+        ref: 'Clip',
         required: true
     },
     replies: [ Reply.schema ],

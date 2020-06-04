@@ -22,10 +22,11 @@ const clipSchema = new Schema({
         type: String,
         required: true
     },
-    comments: {
+    comments: [{
         type: Schema.Types.ObjectId,
-        ref: 'Comments'
-    },
+        ref: 'Comments',
+        required: true
+    }],
     timeStamp: {
         type: Date,
         default: Date.now
