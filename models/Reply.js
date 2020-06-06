@@ -6,21 +6,21 @@ const replySchema = new Schema({
         type: String,
         required: true
     },
-    replyText: {
+    reply_text: {
         type: String,
         required: true
     },
-    author: {
+    author_id: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    comment: {
+    comment_id: {
         type: Schema.Types.ObjectId,
         ref: 'Comment',
         required: true
     },
-    timeStamp: {
+    time_stamp: {
         type: Date,
         default: Date.now
     }

@@ -250,15 +250,16 @@ const deleteClip = (req, res) => {
         console.log('HELLO FROM DELETE CLIP 2: deleteclip - ', deletedClip);
 
         db.User.findById(req.session.currentUser._id, (err, foundUser) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+
             const newClipList = foundUser.clips.filter(clip => clip.toString() !== req.params.id);
             foundUser.clips = newClipList;
-            foundUser.save((err) => {
-                if (err) return res.status(500).json({
-                    status: 500,
-                    error: err,
-                    message: 'Something went wrong, please try again.'
-                });
-            });
+            
+            foundUser.save();
         });
 
         let s3bucket = new aws.S3({

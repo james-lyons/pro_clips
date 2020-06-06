@@ -7,21 +7,21 @@ const commentSchema = new Schema({
         type: String,
         required: true
     },
-    commentText: {
+    comment_text: {
         type: String,
     },
-    author: {
+    author_id: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    clip: {
+    clip_id: {
         type: Schema.Types.ObjectId,
         ref: 'Clip',
         required: true
     },
     replies: [ Reply.schema ],
-    timeStamp: {
+    time_stamp: {
         type: Date,
         default: Date.now
     }

@@ -168,19 +168,21 @@ const editUserProfile = (req,res) => {
                 message: 'Something went wrong, please try again.'
             });
     
-            console.log('hello 2', foundUser);
-            const updatedUser = foundUser;
+            console.log('HELLO FROM UPDATE PROFILE 2', foundUser);
+            let updatedUser = foundUser;
 
             if (req.body.bio && req.body.userName) {
                 updatedUser.bio = req.body.bio;
-                updatedUser.userName = req.body.userName
+                updatedUser.userName = req.body.userName;
             } else if (req.body.bio) {
                 updatedUser.bio = req.body.bio;
-            } else {
-                updatedUser.userName = req.body.userName
+            } else if (req.body.userName) {
+                updatedUser.userName = req.body.userName;
+            } else if (req.body.profileImage) {
+                updatedUser.profile_image = req.body.profileImage;
             };
 
-            console.log('updateduser', updatedUser)
+            console.log('HELLO FROM UPDATE PROFILE 3', updatedUser);
     
             res.status(202).json({
                 status: 202,
