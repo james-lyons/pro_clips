@@ -20,10 +20,6 @@ const indexReplies = (req, res) => {
     });
 };
 
-const showReply = (req, res) => {
-    console.log('hi')
-};
-
 const createReply = (req, res) => {
 
     const currentUser = req.session.currentUser;
@@ -75,21 +71,6 @@ const createReply = (req, res) => {
         return res.status(200).json({
             status: 200,
             message: 'Success!'
-        });
-    });
-};
-
-const editReply = (req, res) => {
-    db.Comment.findByIdAndUpdate(req.params.id, req.body, (err, editedReply) => {
-        if (err) return exports.status(500).json({
-            status: 500,
-            error: err,
-            message: 'Something went wrong, please try again.'
-        });
-
-        res.status(202).json({
-            status: 202,
-            message: 'Success'
         });
     });
 };
@@ -147,10 +128,100 @@ const deleteReply = async (req, res) => {
     });
 };
 
+const likeReply = async (req, res) => {
+    const userId = req.session.currentUser._id;
+    const replyId = req.body.params;
+
+    await db.User.findById(userId, (err, foundUser) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        foundUser.reply_likes.push(replyId);
+        foundUser.save((err) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+        });
+    });
+
+    db.Reply.findById(replyId, (err, foundReply) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        foundReply.likes.push(userId);
+        foundReply.save((err) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+        });
+    });
+
+    return res.status(200).json({
+        status: 200,
+        message: 'Success'
+    });
+};
+
+const unlikeReply = async (req, res) => {
+    const userId = req.session.currentUser._id;
+    const replyId = req.body.params;
+
+    await db.User.findById(userId, (err, foundUser) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        let newReplyLikes = foundUser.reply_likes.filter(like => like.toString() !== replyId);
+        foundUser.reply_likes = newReplyLikes;
+
+        foundUser.save((err) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+        });
+    });
+
+    db.Reply.findById(replyId, (err, foundReply) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        let newLikesArr = foundReply.likes.filter(like => like.toString() !== replyId);
+        foundReply.likes = newLikesArr;    
+
+        foundReply.save((err) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+        });
+    });
+
+    return res.status(200).json({
+        status: 200,
+        message: 'Success'
+    });
+};
+
 module.exports = {
     indexReplies,
-    showReply,
     createReply,
-    editReply,
     deleteReply
 };

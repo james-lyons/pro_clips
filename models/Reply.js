@@ -20,6 +20,11 @@ const replySchema = new Schema({
         ref: 'Comment',
         required: true
     },
+    likes:[{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }],
     time_stamp: {
         type: Date,
         default: Date.now

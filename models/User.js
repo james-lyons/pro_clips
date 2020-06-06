@@ -33,6 +33,16 @@ const userSchema = new Schema({
         ref: 'Reply',
         required: false
     }],
+    comment_likes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
+        required: true
+    }],
+    reply_likes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Reply',
+        required: true
+    }],
     following: [{
         type: Schema.Types.ObjectId,
         ref: 'User'

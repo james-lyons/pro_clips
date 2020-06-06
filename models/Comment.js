@@ -21,6 +21,11 @@ const commentSchema = new Schema({
         required: true
     },
     replies: [ Reply.schema ],
+    likes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }],
     time_stamp: {
         type: Date,
         default: Date.now
