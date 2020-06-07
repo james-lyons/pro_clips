@@ -30,9 +30,6 @@ const createReply = (req, res) => {
         comment_id: req.body.commentId
     };
 
-    console.log('HELLO FROM CREATEREPLY 1: currentUser - ', currentUser);
-    console.log('HELLO FROM CREATEREPLY 2: reply - ', reply);
-
     db.Reply.create(reply, async (err, createdReply) => {
         if (err) return res.status(500).json({
             status: 500,
@@ -47,8 +44,6 @@ const createReply = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
-            console.log('HELLO FROM CREATEREPLY 3: foundUser - ', foundUser);
-
             foundUser.replies.push(createdReply._id);
             foundUser.save();
         });
@@ -60,13 +55,9 @@ const createReply = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
-            console.log('HELLO FROM CREATEREPLY 4: foundComment - ', foundComment);
-
             foundComment.replies.push(createdReply);
             foundComment.save();
         });
-
-        console.log('HELLO FROM CREATEREPLY 5: createdReply - ', createdReply);
 
         return res.status(200).json({
             status: 200,
@@ -139,7 +130,7 @@ const likeReply = async (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        foundUser.reply_likes.push(replyId);
+        foundUser.liked_replies.push(replyId);
         foundUser.save((err) => {
             if (err) return res.status(500).json({
                 status: 500,
@@ -183,8 +174,8 @@ const unlikeReply = async (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        let newReplyLikes = foundUser.reply_likes.filter(like => like.toString() !== replyId);
-        foundUser.reply_likes = newReplyLikes;
+        let newReplyLikes = foundUser.liked_replies.filter(like => like.toString() !== replyId);
+        foundUser.liked_replies = newReplyLikes;
 
         foundUser.save((err) => {
             if (err) return res.status(500).json({

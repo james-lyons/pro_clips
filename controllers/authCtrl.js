@@ -9,9 +9,6 @@ const validateUser = require('../validation/userRegisteration');
 const register = (req, res) => {
     const { errors, notValid } = validateUser(req.body);
 
-    console.log('hello 1', req.body)
-    console.log('hello validation:', errors)
-
     if (notValid) {
         return res.status(400).json({
             status: 400,
@@ -20,23 +17,17 @@ const register = (req, res) => {
         });
     };
 
-    console.log('hello 2')
-
     db.User.findOne({ email: req.body.email }, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
             message: 'Something went wrong, please try again.'
         });
 
-        console.log('hello 3')
-
         if (foundUser) return res.status(400).json({
             status: 400,
             errors: [{ message: 'Username or Email already registered' }],
             message: 'Please try again.'
         });
-
-        console.log('hello 4')
 
         db.User.findOne({ userName: req.body.userName }, (err, foundUser) => {
             if (err) return res.status(500).json({
@@ -45,30 +36,22 @@ const register = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
-            console.log('hello 5')
-
             if (foundUser) return res.status(400).json({
                 status: 400,
                 message: 'Email or Username already registered.'
             });
-
-            console.log('hello 6')
 
             bcrypt.genSalt(10,(err, salt) => {
                 if (err) return res.status(500).json({
                     status: 500,
                     message: 'Something went wrong, please try again.'
                 });
-
-                console.log('hello 7')
     
                 bcrypt.hash(req.body.password, salt, (err, hash) => {
                     if (err) return res.status(500).json({
                         status: 500,
                         message: 'Something went wrong, please try again.'
                     });
-
-                    console.log('hello 8')
     
                     const newUser = {
                         userName: req.body.userName,
@@ -76,16 +59,12 @@ const register = (req, res) => {
                         password: hash,
                         password2: hash
                     };
-
-                    console.log('hello 9', newUser)
     
                     db.User.create(newUser, (err, savedUser) => {
                         if (err) return res.status(500).json({
                             status: 500,
                             message: 'Something went wrong, please try again.'
                         });
-
-                        console.log('hello 10')
     
                         res.status(201).json({
                             status: 201,
@@ -108,15 +87,11 @@ const login = (req, res) => {
         });
     };
 
-    console.log('hello 1')
-
     db.User.findOne({ email: req.body.email }, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
             message: 'Something went wrong, please try again.'
         });
-
-        console.log('hello 2')
 
         if (!foundUser) return res.status(400).json({
             status: 400,
@@ -124,22 +99,14 @@ const login = (req, res) => {
             message: 'Please try again.'
         });
 
-        console.log('hello 3')
-
         bcrypt.compare(req.body.password, foundUser.password, (err, isMatch) => {
             if (err) return res.status(500).json({
                 status: 500,
                 message: 'Something went wrong, please try again.'
             });
 
-            console.log('hello 4')
-
             if (isMatch) {
                 req.session.currentUser = { _id: foundUser._id, userName: foundUser.userName };
-                console.log('hello 5');
-                console.log(req.session.currentUser);
-
-                console.log(req.session)
 
                 return res.status(200).json({
                     status: 200,
@@ -148,8 +115,6 @@ const login = (req, res) => {
                 });
 
             } else {
-                console.log('hello 6')
-                console.log(err, isMatch)
 
                 return res.status(400).json({
                     status: 400,

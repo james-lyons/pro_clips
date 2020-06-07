@@ -30,9 +30,6 @@ const createComment = (req, res) => {
         clip_id: req.body.clipId
     };
 
-    console.log('HELLO FROM CREATECOMMENT 1: currentUser - ', currentUser);
-    console.log('HELLO FROM CREATECOMMENT 2: comment - ', comment);
-
     db.Comment.create(comment, async (err, createdComment) => {
         if (err) return res.status(500).json({
             status: 500,
@@ -47,8 +44,6 @@ const createComment = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
-            console.log('HELLO FROM CREATECOMMENT 3: foundUser - ', foundUser);
-
             foundUser.comments.push(createdComment._id);
             foundUser.save();
         });
@@ -60,13 +55,9 @@ const createComment = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
-            console.log('HELLO FROM CREATECOMMENT 4: foundClip - ', foundClip);
-
             foundClip.comments.push(createdComment._id);
             foundClip.save();
         });
-
-        console.log('HELLO FROM CREATECOMMENT 5: createdComment - ', createdComment);
 
         return res.status(200).json({
             status: 200,
@@ -83,7 +74,6 @@ const deleteComment = async (req, res) => {
             error: err,
             message: 'Something went wrong, please try again'
         });
-        console.log('HELLO FROM DELETE COMMENT 1:', deletedComment);
 
         db.User.findById(req.session.currentUser._id, (err, foundUser) => {
             if (err) return res.status(500).json({
@@ -94,9 +84,7 @@ const deleteComment = async (req, res) => {
     
             let newCommentsArr = foundUser.comments.filter(comment => comment.toString() !== req.params.id);
             foundUser.comments = newCommentsArr;
-    
-            console.log('HELLO FROM DELETE COMMENT 2:', foundUser)
-    
+        
             foundUser.save();
         });
 
@@ -106,17 +94,11 @@ const deleteComment = async (req, res) => {
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
-    
-            console.log('HELLO FROM DELETE COMMENT 2:', foundClip);
-    
+        
             let newCommentsArr = foundClip.comments.filter(comment => comment.toString() !== req.params.id);
-    
-            console.log('HELLO FROM DELETE COMMENT 3:', newCommentsArr);
-    
+        
             foundClip.comments = newCommentsArr;
-    
-            console.log('HELLO FROM DELETE COMMENT 4:', foundClip);
-    
+        
             foundClip.save();
 
             return res.status(202).json({
@@ -139,7 +121,7 @@ const likeComment = async (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        foundUser.comment_likes.push(commentId);
+        foundUser.liked_comments.push(commentId);
         foundUser.save((err) => {
             if (err) return res.status(500).json({
                 status: 500,
@@ -183,8 +165,8 @@ const unlikeComment = async (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        let newCommentLikes = foundUser.comment_likes.filter(like => like.toString() !== commentId);
-        foundUser.comment_likes = newCommentLikes;
+        let newCommentLikes = foundUser.liked_comments.filter(like => like.toString() !== commentId);
+        foundUser.liked_comments = newCommentLikes;
 
         foundUser.save((err) => {
             if (err) return res.status(500).json({

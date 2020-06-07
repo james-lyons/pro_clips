@@ -33,12 +33,12 @@ const userSchema = new Schema({
         ref: 'Reply',
         required: false
     }],
-    comment_likes: [{
+    liked_comments: [{
         type: Schema.Types.ObjectId,
         ref: 'Comment',
         required: true
     }],
-    reply_likes: [{
+    liked_replies: [{
         type: Schema.Types.ObjectId,
         ref: 'Reply',
         required: true

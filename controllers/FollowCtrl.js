@@ -10,9 +10,6 @@ const indexFriends = (req, res) => {
 };
 
 const followUser = (req, res) => {
-    console.log('HELLO 1');
-    console.log(req.params);
-
 
     db.User.findOne({ userName: req.params.userName }, (err, foundUser) => {
         if (err) return res.status(500).json({
@@ -21,16 +18,12 @@ const followUser = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        console.log('HELLO 2');
         db.User.findById(req.session.currentUser._id, (err, foundCurrentUser) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
-
-            console.log('foundUser', foundUser);
-            console.log('foundCurrentUser', foundCurrentUser);
 
             foundUser.followers.push(foundCurrentUser._id);
             foundCurrentUser.following.push(foundUser._id);
@@ -50,9 +43,6 @@ const followUser = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
 
-                console.log('FOLLOW USER 6', foundUser.followers);
-
-
                 return res.status(200).json({
                     status: 200,
                     message: 'Success!',
@@ -64,9 +54,6 @@ const followUser = (req, res) => {
 };
 
 const unfollowUser = (req, res) => {
-    console.log('HELLO 1');
-    console.log(req.params);
-
 
     db.User.findOne({ userName: req.params.userName }, (err, foundUser) => {
         if (err) return res.status(500).json({
@@ -75,7 +62,6 @@ const unfollowUser = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        console.log('HELLO 2');
         db.User.findById(req.session.currentUser._id, (err, foundCurrentUser) => {
             if (err) return res.status(500).json({
                 status: 500,
@@ -83,7 +69,6 @@ const unfollowUser = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
-            console.log('HELLO 3')
             // user._id === objectId, have to use .toString() to compare with
 
             const foundUserId = foundUser._id.toString();
@@ -96,8 +81,6 @@ const unfollowUser = (req, res) => {
 
             foundUser.followers = newFollowerList;
             foundCurrentUser.following = newFollowingList;
-
-            console.log('HELLO 4')
 
             foundUser.save((err) => {
                 if (err) return res.status(500).json({
@@ -113,8 +96,6 @@ const unfollowUser = (req, res) => {
                     error: err,
                     message: 'Something went wrong, please try again.'
                 });
-
-                console.log('UNFOLLOW USER 5', foundUser.followers);
 
                 return res.status(200).json({
                     status: 200,

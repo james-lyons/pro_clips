@@ -4,7 +4,6 @@ const ctrls = require('../controllers');
 const authRequired = require('../middleware/authRequired');
 const upload = require('../middleware/multer');
 
-router.get('/', ctrls.clips.indexClips);
 router.get('/browseclips', ctrls.clips.indexBrowseClips);
 router.get('/clips/:username', ctrls.clips.indexUserClips);
 router.get('/clip/:id', ctrls.clips.showClip);
