@@ -27,8 +27,10 @@ const createReply = (req, res) => {
         author_name: currentUser.userName,
         reply_text: req.body.replyText,
         author_id: currentUser._id,
-        comment_id: req.body.commentId
+        comment_id: req.params.id
     };
+
+    console.log('HELLO FROM CREATEREPLY 1', reply)
 
     db.Reply.create(reply, async (err, createdReply) => {
         if (err) return res.status(500).json({
@@ -37,6 +39,8 @@ const createReply = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
+        console.log('HELLO FROM CREATEREPLY 2', createdReply)
+
         await db.User.findById(currentUser._id, (err, foundUser) => {
             if (err) return res.status(500).json({
                 status: 500,
@@ -44,8 +48,10 @@ const createReply = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
+            
             foundUser.replies.push(createdReply._id);
             foundUser.save();
+            console.log('HELLO FROM CREATEREPLY 3', foundUser)
         });
 
         await db.Comment.findById(reply.comment_id, (err, foundComment) => {
@@ -57,6 +63,9 @@ const createReply = (req, res) => {
 
             foundComment.replies.push(createdReply);
             foundComment.save();
+
+            console.log('HELLO FROM CREATEREPLY 4', foundComment)
+
         });
 
         return res.status(200).json({
@@ -66,56 +75,62 @@ const createReply = (req, res) => {
     });
 };
 
-const deleteReply = async (req, res) => {
-    await db.Reply.findByIdAndDelete(req.params.id, (err, deletedReply ) => {
-        if (err) return res;status(500).json({
+const deleteReply = (req, res) => {
+    db.Reply.findByIdAndDelete(req.params.id, async (err, deletedReply ) => {
+        if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again'
         });
-    });
-
-    await db.User.findById(req.session.currentUser._id, (err, foundUser) => {
-        if (err) return res.status(500).json({
-            status: 500,
-            error: err,
-            message: 'Something went wrong, please try again.'
-        });
-
-        let newRepliesArr = foundUser.replies.filter(reply => reply.toString() !== req.params.id);
-
-        foundUser = { ...foundUser, replies: newRepliesArr };
-        foundUser.save((err) => {
+        
+        await db.User.findById(req.session.currentUser._id, (err, foundUser) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
+    
+            let newRepliesArr = foundUser.replies.filter(reply => reply.toString() !== req.params.id);
+    
+            foundUser.replies = newRepliesArr;
+            foundUser.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
+            });
         });
-    });
-
-    await db.Comments.findById(req.body.commentId, (err, foundComment) => {
-        if (err) return res.status(500).json({
-            status: 500,
-            error: err,
-            message: 'Something went wrong, please try again.'
-        });
-
-        let newCommentsArr = foundComment.comments.filter(comment => comment._id.toString() !== req.params.id);
-
-        foundComment = { ...foundComment, replies: newRepliesArr };
-        foundComment.save((err) => {
+    
+        await db.Comment.findById(deletedReply.comment_id, (err, foundComment) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
-        });
-    });
 
-    return res.status(202).json({
-        status: 200,
-        message: 'Success'
+            console.log(deletedReply);
+            console.log(foundComment._id)
+    
+            let newRepliesArr = foundComment.replies.filter(reply => reply._id.toString() !== req.params.id);
+    
+            // console.log('FOUNDCOMMENT', foundComment);
+            // console.log('NEWREPLYARR', newRepliesArr)
+    
+            foundComment.replies = newRepliesArr;
+            foundComment.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
+            });
+        });
+    
+        return res.status(202).json({
+            status: 200,
+            message: 'Success'
+        });
     });
 };
 
