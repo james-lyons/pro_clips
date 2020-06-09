@@ -30,16 +30,12 @@ const createReply = (req, res) => {
         comment_id: req.params.id
     };
 
-    console.log('HELLO FROM CREATEREPLY 1', reply)
-
     db.Reply.create(reply, async (err, createdReply) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again.'
         });
-
-        console.log('HELLO FROM CREATEREPLY 2', createdReply)
 
         await db.User.findById(currentUser._id, (err, foundUser) => {
             if (err) return res.status(500).json({
@@ -51,7 +47,6 @@ const createReply = (req, res) => {
             
             foundUser.replies.push(createdReply._id);
             foundUser.save();
-            console.log('HELLO FROM CREATEREPLY 3', foundUser)
         });
 
         await db.Comment.findById(reply.comment_id, (err, foundComment) => {
@@ -63,8 +58,6 @@ const createReply = (req, res) => {
 
             foundComment.replies.push(createdReply);
             foundComment.save();
-
-            console.log('HELLO FROM CREATEREPLY 4', foundComment)
 
         });
 
@@ -108,14 +101,8 @@ const deleteReply = (req, res) => {
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
-
-            console.log(deletedReply);
-            console.log(foundComment._id)
     
             let newRepliesArr = foundComment.replies.filter(reply => reply._id.toString() !== req.params.id);
-    
-            // console.log('FOUNDCOMMENT', foundComment);
-            // console.log('NEWREPLYARR', newRepliesArr)
     
             foundComment.replies = newRepliesArr;
             foundComment.save((err) => {

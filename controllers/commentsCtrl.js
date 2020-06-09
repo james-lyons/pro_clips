@@ -66,16 +66,24 @@ const createComment = (req, res) => {
     });
 };
 
-const deleteComment = async (req, res) => {
+const deleteComment = (req, res) => {
 
-    await db.Comment.findByIdAndDelete(req.params.id, (err, deletedComment) => {
+    db.Comment.findByIdAndDelete(req.params.id, async (err, deletedComment) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again'
         });
 
-        db.User.findById(req.session.currentUser._id, (err, foundUser) => {
+        await db.Reply.deleteMany({ comment_id: req.params.id }, (err, deletedReplies) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+        });
+
+        await db.User.findById(req.session.currentUser._id, (err, foundUser) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
@@ -88,7 +96,7 @@ const deleteComment = async (req, res) => {
             foundUser.save();
         });
 
-        db.Clip.findById(deletedComment.clip_id, (err, foundClip) => {
+        await db.Clip.findById(deletedComment.clip_id, (err, foundClip) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,

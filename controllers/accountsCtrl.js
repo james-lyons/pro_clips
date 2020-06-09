@@ -135,34 +135,79 @@ const editUserProfile = (req,res) => {
             errors: [{ message: 'Username already registered' }],
             message: 'Please try again.'
         });
-        
-        db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (err, foundUser) => {
-    
+
+        db.User.findById(req.session.currentUser, (err, foundUser) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
-    
-            let updatedUser = foundUser;
 
-            if (req.body.bio && req.body.userName) {
-                updatedUser.bio = req.body.bio;
-                updatedUser.userName = req.body.userName;
-            } else if (req.body.bio) {
-                updatedUser.bio = req.body.bio;
-            } else if (req.body.userName) {
-                updatedUser.userName = req.body.userName;
-            } else if (req.body.profileImage) {
-                updatedUser.profile_image = req.body.profileImage;
-            };
+            db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, async (err, updatedUser) => {
+        
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
+        
+                let updatedUserData = updatedUser;
     
-            res.status(202).json({
-                status: 202,
-                message: 'Successfully edited user profile',
-                data: updatedUser
+                if (req.body.bio && req.body.userName) {
+                    updatedUserData.bio = req.body.bio;
+                    updatedUserData.userName = req.body.userName;
+                } else if (req.body.bio) {
+                    updatedUserData.bio = req.body.bio;
+                } else if (req.body.userName) {
+                    updatedUserData.userName = req.body.userName;
+                } else if (req.body.profileImage) {
+                    updatedUserData.profile_image = req.body.profileImage;
+                };
+    
+                req.session.currentUser.userName = req.body.userName;
+    
+                if (req.body.userName) {
+    
+                    await db.Comment.find({ author_name: foundUser.userName }, (err, foundComments) => {
+                        if (err) return res.status(500).json({
+                            status: 500,
+                            error: err,
+                            message: 'Something went wrong, please try again.'
+                        });
+        
+                        foundComments.forEach(foundComment => {
+                            foundComment.author_name = req.body.userName;
+                            foundComment.replies.forEach(reply => {
+                                if (reply.author_name === foundUser.userName) {
+                                    reply.author_name = req.body.userName
+                                };
+                            });
+                            foundComment.save();
+                        });
+                    });
+    
+                    await db.Reply.find({ author_name: foundUser.userName }, (err, foundReplies) => {
+                        if (err) return res.status(500).json({
+                            status: 500,
+                            erro: err,
+                            message: 'Something went wrong, please try again.'
+                        });
+    
+    
+                        foundReplies.forEach(foundReply => {
+                            foundReply.author_name = req.body.userName;
+                            foundReply.save();
+                        });
+                    });
+                };
+        
+                res.status(202).json({
+                    status: 202,
+                    message: 'Successfully edited user profile',
+                    data: updatedUserData
+                });
             });
-        });
+        }); 
     });
 };
 
