@@ -123,7 +123,7 @@ const deleteReply = (req, res) => {
 
 const likeReply = async (req, res) => {
     const userId = req.session.currentUser._id;
-    const replyId = req.body.params;
+    const replyId = req.params.id;
 
     await db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
@@ -167,7 +167,7 @@ const likeReply = async (req, res) => {
 
 const unlikeReply = async (req, res) => {
     const userId = req.session.currentUser._id;
-    const replyId = req.body.params;
+    const replyId = req.params.id;
 
     await db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
@@ -216,5 +216,7 @@ const unlikeReply = async (req, res) => {
 module.exports = {
     indexReplies,
     createReply,
-    deleteReply
+    deleteReply,
+    likeReply,
+    unlikeReply
 };

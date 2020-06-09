@@ -43,6 +43,11 @@ const userSchema = new Schema({
         ref: 'Reply',
         required: true
     }],
+    liked_clips: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Clip',
+        required: true
+    }],
     following: [{
         type: Schema.Types.ObjectId,
         ref: 'User'

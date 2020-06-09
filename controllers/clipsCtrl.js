@@ -244,11 +244,123 @@ const deleteClip = (req, res) => {
     });
 };
 
+const likeClip = (req, res) => {
+    const userId = req.session.currentUser._id;
+    const clipId = req.params.id;
+
+    db.User.findById(userId, (err, foundUser) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        let foundClipArray = foundUser.liked_clips.filter(clip => clipId == clip._id.toString());
+
+        if (foundClipArray.length > 0) {
+            return { message: 'Already liked' }
+        };
+
+        foundUser.liked_clips.push(clipId);
+        foundUser.save((err) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+        });
+
+        db.Clip.findById(clipId, (err, foundClip) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+    
+            foundClip.likes.push(userId);
+
+            foundClip.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
+            });
+        });
+    });
+
+    return res.status(200).json({
+        status: 200,
+        message: 'Success'
+    });
+};
+
+const unlikeClip = (req, res) => {
+    const userId = req.session.currentUser._id;
+    const clipId = req.params.id;
+
+    console.log('Hello from unlickeClip 1a: userId', userId);
+    console.log('Hello from unlickeClip 1b: clipId', clipId);
+
+    db.User.findById(userId, (err, foundUser) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        console.log('Hello from unlickeClip 2: clipId', foundUser);
+
+        let newClipLikes = foundUser.liked_clips.filter(like => like.toString() !== clipId);
+        foundUser.liked_clips = newClipLikes;
+
+        console.log('Hello from unlickeClip 3: foundUserClips', foundUser.liked_clips);
+
+        foundUser.save((err) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+        });
+
+        db.Clip.findById(clipId, (err, foundClip) => {
+            if (err) return res.status(500).json({
+                status: 500,
+                error: err,
+                message: 'Something went wrong, please try again.'
+            });
+
+            console.log('Hello from unlickeClip 4: foundClip', foundClip);
+    
+            let newLikesArr = foundClip.likes.filter(like => like.toString() !== userId);
+            foundClip.likes = newLikesArr;
+
+            console.log('Hello from unlickeClip 5: foundClip.likes', foundClip.likes);
+    
+            foundClip.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
+            });
+        });
+    });
+
+    return res.status(200).json({
+        status: 200,
+        message: 'Success'
+    });
+};
+
 module.exports = {
     indexUserClips,
     indexBrowseClips,
     showClip,
     uploadClip,
     editClip,
-    deleteClip
+    deleteClip,
+    likeClip,
+    unlikeClip
 };

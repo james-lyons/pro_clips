@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const clipSchema = new Schema({
     poster: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     title: {
         type: String,
@@ -25,6 +26,11 @@ const clipSchema = new Schema({
     comments: [{
         type: Schema.Types.ObjectId,
         ref: 'Comments',
+        required: true
+    }],
+    likes: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     }],
     timeStamp: {

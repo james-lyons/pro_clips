@@ -120,7 +120,7 @@ const deleteComment = (req, res) => {
 
 const likeComment = async (req, res) => {
     const userId = req.session.currentUser._id;
-    const commentId = req.body.params;
+    const commentId = req.params.id;
 
     await db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
@@ -164,7 +164,7 @@ const likeComment = async (req, res) => {
 
 const unlikeComment = async (req, res) => {
     const userId = req.session.currentUser._id;
-    const commentId = req.body.params;
+    const commentId = req.params.id;
 
     await db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
@@ -213,5 +213,7 @@ const unlikeComment = async (req, res) => {
 module.exports = {
     indexComments,
     createComment,
-    deleteComment
+    deleteComment,
+    likeComment,
+    unlikeComment
 };
