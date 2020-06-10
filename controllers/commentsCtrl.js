@@ -122,6 +122,9 @@ const likeComment = (req, res) => {
     const userId = req.session.currentUser._id;
     const commentId = req.params.id;
 
+    console.log('Hello from likeComment 1a: userId', userId);
+    console.log('Hello from likeComment 1b: commentId', commentId);
+
     db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
