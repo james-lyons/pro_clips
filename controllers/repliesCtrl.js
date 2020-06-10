@@ -121,16 +121,22 @@ const deleteReply = (req, res) => {
     });
 };
 
-const likeReply = async (req, res) => {
+const likeReply = (req, res) => {
     const userId = req.session.currentUser._id;
     const replyId = req.params.id;
 
-    await db.User.findById(userId, (err, foundUser) => {
+    db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again.'
         });
+
+        let foundReplyLikes = foundUser.liked_replies.filter(reply => replyId == reply._id.toString());
+
+        if (foundReplyLikes.length > 0) {
+            return { message: 'Already liked' }
+        };
 
         foundUser.liked_replies.push(replyId);
         foundUser.save((err) => {
@@ -140,21 +146,22 @@ const likeReply = async (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
         });
-    });
 
-    db.Reply.findById(replyId, (err, foundReply) => {
-        if (err) return res.status(500).json({
-            status: 500,
-            error: err,
-            message: 'Something went wrong, please try again.'
-        });
-
-        foundReply.likes.push(userId);
-        foundReply.save((err) => {
+        db.Reply.findById(replyId, (err, foundReply) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
+            });
+    
+            foundReply.likes.push(userId);
+
+            foundReply.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
             });
         });
     });
@@ -165,19 +172,26 @@ const likeReply = async (req, res) => {
     });
 };
 
-const unlikeReply = async (req, res) => {
+const unlikeReply = (req, res) => {
     const userId = req.session.currentUser._id;
     const replyId = req.params.id;
 
-    await db.User.findById(userId, (err, foundUser) => {
+    console.log('Hello from unlikeReply 1a: userId', userId);
+    console.log('Hello from unlikeReply 1b: replyId', replyId);
+
+    db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again.'
         });
 
-        let newReplyLikes = foundUser.liked_replies.filter(like => like.toString() !== replyId);
+        console.log('Hello from unlikeReply 2: replyId', foundUser);
+
+        let newReplyLikes = foundUser.liked_replies.filter(reply => reply.toString() !== replyId);
         foundUser.liked_replies = newReplyLikes;
+
+        console.log('Hello from unlikeReply 3: foundUserReplies', foundUser.liked_replies);
 
         foundUser.save((err) => {
             if (err) return res.status(500).json({
@@ -186,23 +200,27 @@ const unlikeReply = async (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
         });
-    });
 
-    db.Reply.findById(replyId, (err, foundReply) => {
-        if (err) return res.status(500).json({
-            status: 500,
-            error: err,
-            message: 'Something went wrong, please try again.'
-        });
-
-        let newLikesArr = foundReply.likes.filter(like => like.toString() !== replyId);
-        foundReply.likes = newLikesArr;    
-
-        foundReply.save((err) => {
+        db.Reply.findById(replyId, (err, foundReply) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
+            });
+
+            console.log('Hello from unlikeReply 4: foundReply', foundReply);
+    
+            let newLikesArr = foundReply.likes.filter(like => like.toString() !== userId);
+            foundReply.likes = newLikesArr;
+
+            console.log('Hello from unlikeReply 5: foundReply.likes', foundReply.likes);
+    
+            foundReply.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
             });
         });
     });

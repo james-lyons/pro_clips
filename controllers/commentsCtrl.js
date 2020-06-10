@@ -118,16 +118,22 @@ const deleteComment = (req, res) => {
     });
 };
 
-const likeComment = async (req, res) => {
+const likeComment = (req, res) => {
     const userId = req.session.currentUser._id;
     const commentId = req.params.id;
 
-    await db.User.findById(userId, (err, foundUser) => {
+    db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again.'
         });
+
+        let foundCommentArray = foundUser.liked_comments.filter(comment => commentId == comment._id.toString());
+
+        if (foundCommentArray.length > 0) {
+            return { message: 'Already liked' };
+        };
 
         foundUser.liked_comments.push(commentId);
         foundUser.save((err) => {
@@ -137,21 +143,22 @@ const likeComment = async (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
         });
-    });
 
-    db.Comment.findById(commentId, (err, foundComment) => {
-        if (err) return res.status(500).json({
-            status: 500,
-            error: err,
-            message: 'Something went wrong, please try again.'
-        });
-
-        foundComment.likes.push(userId);
-        foundComment.save((err) => {
+        db.Comment.findById(commentId, (err, foundComment) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
+            });
+    
+            foundComment.likes.push(userId);
+
+            foundComment.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
             });
         });
     });
@@ -162,19 +169,26 @@ const likeComment = async (req, res) => {
     });
 };
 
-const unlikeComment = async (req, res) => {
+const unlikeComment = (req, res) => {
     const userId = req.session.currentUser._id;
     const commentId = req.params.id;
 
-    await db.User.findById(userId, (err, foundUser) => {
+    console.log('Hello from unlikeComment 1a: userId', userId);
+    console.log('Hello from unlikeComment 1b: commentId', commentId);
+
+    db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again.'
         });
 
-        let newCommentLikes = foundUser.liked_comments.filter(like => like.toString() !== commentId);
+        console.log('Hello from unlikeComment 2: commentId', foundUser);
+
+        let newCommentLikes = foundUser.liked_comments.filter(comment => comment.toString() !== commentId);
         foundUser.liked_comments = newCommentLikes;
+
+        console.log('Hello from unlikeComment 3: foundUserComments', foundUser.liked_comments);
 
         foundUser.save((err) => {
             if (err) return res.status(500).json({
@@ -183,23 +197,27 @@ const unlikeComment = async (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
         });
-    });
 
-    db.Comment.findById(commentId, (err, foundComment) => {
-        if (err) return res.status(500).json({
-            status: 500,
-            error: err,
-            message: 'Something went wrong, please try again.'
-        });
-
-        let newLikesArr = foundComment.likes.filter(like => like.toString() !== commentId);
-        foundComment.likes = newLikesArr;    
-
-        foundComment.save((err) => {
+        db.Comment.findById(commentId, (err, foundComment) => {
             if (err) return res.status(500).json({
                 status: 500,
                 error: err,
                 message: 'Something went wrong, please try again.'
+            });
+
+            console.log('Hello from unlikeComment 4: foundComment', foundComment);
+    
+            let newLikesArr = foundComment.likes.filter(like => like.toString() !== userId);
+            foundComment.likes = newLikesArr;
+
+            console.log('Hello from unlikeComment 5: foundComment.likes', foundComment.likes);
+    
+            foundComment.save((err) => {
+                if (err) return res.status(500).json({
+                    status: 500,
+                    error: err,
+                    message: 'Something went wrong, please try again.'
+                });
             });
         });
     });
