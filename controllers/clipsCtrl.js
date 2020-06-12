@@ -248,6 +248,9 @@ const likeClip = (req, res) => {
     const userId = req.session.currentUser._id;
     const clipId = req.params.id;
 
+    console.log('Hello from likeClip 1a: userId', userId);
+    console.log('Hello from likeClip 1b: clipId', clipId);
+
     db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
@@ -288,12 +291,13 @@ const likeClip = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
             });
-        });
-    });
 
-    return res.status(200).json({
-        status: 200,
-        message: 'Success'
+            return res.status(200).json({
+                status: 200,
+                message: 'Success',
+                data: foundClip
+            });
+        });
     });
 };
 
@@ -347,12 +351,13 @@ const unlikeClip = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
             });
-        });
-    });
 
-    return res.status(200).json({
-        status: 200,
-        message: 'Success'
+            return res.status(200).json({
+                status: 200,
+                message: 'Success',
+                data: foundClip
+            });
+        });
     });
 };
 

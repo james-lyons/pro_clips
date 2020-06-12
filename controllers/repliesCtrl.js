@@ -121,8 +121,6 @@ const deleteReply = (req, res) => {
     });
 };
 
-// To be completed at a later date.
-
 const likeReply = (req, res) => {
     const userId = req.session.currentUser._id;
     const replyId = req.params.id;
@@ -180,15 +178,22 @@ const likeReply = (req, res) => {
                 });
 
                 foundComment.save();
+                
+                db.Comment.find({ clip_id: foundComment.clip_id }, (err, foundComments) => {
+                    if (err) return res.status(500).json({
+                        status: 500,
+                        message: 'Something went wrong, please try again.',
+                        error: err
+                    });
+
+                    return res.status(200).json({
+                        status: 200,
+                        message: 'Success',
+                        data: foundComments
+                    });
+                });
             });
         });
-    });
-
-    console.log('hello from likereply 2')
-
-    return res.status(200).json({
-        status: 200,
-        message: 'Success'
     });
 };
 
@@ -248,13 +253,22 @@ const unlikeReply = (req, res) => {
                 });
 
                 foundComment.save();
+
+                db.Comment.find({ clip_id: foundComment.clip_id }, (err, foundComments) => {
+                    if (err) return res.status(500).json({
+                        status: 500,
+                        message: 'Something went wrong, please try again.',
+                        error: err
+                    });
+
+                    return res.status(200).json({
+                        status: 200,
+                        message: 'Success',
+                        data: foundComments
+                    });
+                });
             });
         });
-    });
-
-    return res.status(200).json({
-        status: 200,
-        message: 'Success'
     });
 };
 
