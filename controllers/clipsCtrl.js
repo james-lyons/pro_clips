@@ -157,6 +157,7 @@ const uploadClip = (req, res) => {
 
         let newClip = {
             poster: foundUser._id,
+            poster_name: username,
             title: title,
             key: newKey,
             url: newUrl,

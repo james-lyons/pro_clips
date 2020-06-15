@@ -167,6 +167,19 @@ const editUserProfile = (req,res) => {
                 req.session.currentUser.userName = req.body.userName;
     
                 if (req.body.userName) {
+
+                    await db.Clip.find({ poster: foundUser._id }, (err, foundClips) => {
+                        if (err) return res.status(500).json({
+                            status: 500,
+                            error: err,
+                            message: 'Something went wrong, please try again.'
+                        });
+
+                        foundClips.forEach(clip => {
+                            clip.poster_name = req.body.userName;
+                            clip.save();
+                        });
+                    });
     
                     await db.Comment.find({ author_name: foundUser.userName }, (err, foundComments) => {
                         if (err) return res.status(500).json({

@@ -7,6 +7,10 @@ const clipSchema = new Schema({
         ref: 'User',
         required: true
     },
+    poster_name: {
+        type: 'string',
+        required: true
+    },
     title: {
         type: String,
         required: true
