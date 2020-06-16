@@ -29,6 +29,26 @@ const indexUserClips = (req, res) => {
     });
 };
 
+const indexGameClips = (req, res) => {
+    console.log('Hello from indexGameClips 2: req.params.game', req.params.game);
+    
+    db.Clip.find({ game: req.params.game}, (err, foundClips) => {
+        if (err) return res.status(500).json({
+            status: 500,
+            error: err,
+            message: 'Something went wrong, please try again.'
+        });
+
+        console.log('Hello from indexGameClips 2: foundClips', foundClips);
+
+        return res.status(200).json({
+            status: 200,
+            message: 'Success.',
+            data: foundClips
+        });
+    });
+};
+
 const indexBrowseClips = async (req, res) => {
     let ApexLegends;
     let CODWarzone;
@@ -36,7 +56,7 @@ const indexBrowseClips = async (req, res) => {
     let Valorant;
     let Fortnite;
 
-    await db.Clip.find({"game": "Apex Legends"}, (err, foundClips) => {
+    await db.Clip.find({ "game": "Apex Legends" }, (err, foundClips) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
@@ -364,6 +384,7 @@ const unlikeClip = (req, res) => {
 
 module.exports = {
     indexUserClips,
+    indexGameClips,
     indexBrowseClips,
     showClip,
     uploadClip,

@@ -5,6 +5,7 @@ const authRequired = require('../middleware/authRequired');
 const upload = require('../middleware/multer');
 
 router.get('/browseclips', ctrls.clips.indexBrowseClips);
+router.get('/clips/game/:game', ctrls.clips.indexGameClips);
 router.get('/clips/:username', ctrls.clips.indexUserClips);
 router.get('/clip/:id', ctrls.clips.showClip);
 router.post('/', authRequired, upload.single('clip'), ctrls.clips.uploadClip);
