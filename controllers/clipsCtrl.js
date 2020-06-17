@@ -30,16 +30,13 @@ const indexUserClips = (req, res) => {
 };
 
 const indexGameClips = (req, res) => {
-    console.log('Hello from indexGameClips 2: req.params.game', req.params.game);
-    
+
     db.Clip.find({ game: req.params.game}, (err, foundClips) => {
         if (err) return res.status(500).json({
             status: 500,
             error: err,
             message: 'Something went wrong, please try again.'
         });
-
-        console.log('Hello from indexGameClips 2: foundClips', foundClips);
 
         return res.status(200).json({
             status: 200,
@@ -269,9 +266,6 @@ const likeClip = (req, res) => {
     const userId = req.session.currentUser._id;
     const clipId = req.params.id;
 
-    console.log('Hello from likeClip 1a: userId', userId);
-    console.log('Hello from likeClip 1b: clipId', clipId);
-
     db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
@@ -300,8 +294,6 @@ const likeClip = (req, res) => {
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
-
-            console.log('hello from likeclip: foundClip', foundClip)
     
             foundClip.likes.push(userId);
 
@@ -326,9 +318,6 @@ const unlikeClip = (req, res) => {
     const userId = req.session.currentUser._id;
     const clipId = req.params.id;
 
-    console.log('Hello from unlikeClip 1a: userId', userId);
-    console.log('Hello from unlikeClip 1b: clipId', clipId);
-
     db.User.findById(userId, (err, foundUser) => {
         if (err) return res.status(500).json({
             status: 500,
@@ -336,12 +325,8 @@ const unlikeClip = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        console.log('Hello from unlikeClip 2: clipId', foundUser);
-
         let newClipLikes = foundUser.liked_clips.filter(like => like.toString() !== clipId);
         foundUser.liked_clips = newClipLikes;
-
-        console.log('Hello from unlikeClip 3: foundUserClips', foundUser.liked_clips);
 
         foundUser.save((err) => {
             if (err) return res.status(500).json({
@@ -357,13 +342,9 @@ const unlikeClip = (req, res) => {
                 error: err,
                 message: 'Something went wrong, please try again.'
             });
-
-            console.log('Hello from unlikeClip 4: foundClip', foundClip);
     
             let newLikesArr = foundClip.likes.filter(like => like.toString() !== userId);
             foundClip.likes = newLikesArr;
-
-            console.log('Hello from unlikeClip 5: foundClip.likes', foundClip.likes);
     
             foundClip.save((err) => {
                 if (err) return res.status(500).json({
