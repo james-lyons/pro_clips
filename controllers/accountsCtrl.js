@@ -156,12 +156,16 @@ const editUserProfile = (req,res) => {
                 if (req.body.bio && req.body.userName) {
                     updatedUserData.bio = req.body.bio;
                     updatedUserData.userName = req.body.userName;
+
                 } else if (req.body.bio) {
                     updatedUserData.bio = req.body.bio;
+
                 } else if (req.body.userName) {
                     updatedUserData.userName = req.body.userName;
+
                 } else if (req.body.profileImage) {
                     updatedUserData.profile_image = req.body.profileImage;
+                    
                 };
     
                 req.session.currentUser.userName = req.body.userName;
