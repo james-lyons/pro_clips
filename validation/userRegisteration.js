@@ -1,6 +1,6 @@
 module.exports = (
     {
-        userName,
+        username,
         email,
         password,
         password2
@@ -8,7 +8,7 @@ module.exports = (
 
     let errors = [];
 
-    if (!userName) {
+    if (!username) {
         errors.push({ message: 'Please enter your username' });
     };
 

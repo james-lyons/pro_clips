@@ -7,10 +7,10 @@ const db = require('../models');
 
 const fetchUsers = (req, res) => {
 
-    db.User.find({}, (err, foundUsers) => {
-        if (err) return res.status(500).json({
+    db.User.find({}, (error, foundUsers) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
@@ -24,11 +24,11 @@ const fetchUsers = (req, res) => {
 
 const fetchCurrentUser = (req, res) => {
 
-    db.User.findById(req.session.currentUser._id, (err, foundUser) => {
+    db.User.findById(req.session.currentUser._id, (error, foundUser) => {
 
-        if (err) return res.status(500).json({
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
@@ -41,26 +41,27 @@ const fetchCurrentUser = (req, res) => {
 };
 
 const fetchUser = (req, res) => {
+    console.log(req.params.username)
 
-    db.User.findOne({ userName: req.params.userName }, (err, foundUser) => {
+    db.User.findOne({ username: req.params.username }, (error, foundUser) => {
 
-        if (err) return res.status(500).json({
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         if (!foundUser) return res.status(400).json({
             status: 400,
-            error: [{ error: 'No user by that name.' }],
+            error: { message: 'No user by that name.' },
             message: 'Please try again.'
         });
 
         if (req.session.currentUser) {
-            db.User.findById(req.session.currentUser._id, (err, foundCurrentUser) => {
-                if (err) return res.status(500).json({
+            db.User.findById(req.session.currentUser._id, (error, foundCurrentUser) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
 
@@ -68,7 +69,7 @@ const fetchUser = (req, res) => {
 
                     const userData = {
                         bio: foundUser.bio,
-                        userName: foundUser.userName,
+                        username: foundUser.username,
                         profile_image: foundUser.profile_image,
                         clips: foundUser.clips,
                         following: foundUser.following,
@@ -85,7 +86,7 @@ const fetchUser = (req, res) => {
                 } else {
                     const userData = {
                         bio: foundUser.bio,
-                        userName: foundUser.userName,
+                        username: foundUser.username,
                         profile_image: foundUser.profile_image,
                         clips: foundUser.clips,
                         following: foundUser.following,
@@ -104,7 +105,7 @@ const fetchUser = (req, res) => {
         } else {
             const userData = {
                 bio: foundUser.bio,
-                userName: foundUser.userName,
+                username: foundUser.username,
                 profile_image: foundUser.profile_image,
                 clips: foundUser.clips,
                 following: foundUser.following,
@@ -123,96 +124,96 @@ const fetchUser = (req, res) => {
 
 const editUserProfile = (req,res) => {
 
-    db.User.findOne({ userName: req.body.userName }, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findOne({ username: req.body.username }, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         if (foundUser) return res.status(400).json({
             status: 400,
-            errors: [{ message: 'Username already registered' }],
+            error: { message: 'Username already registered' },
             message: 'Please try again.'
         });
 
-        db.User.findById(req.session.currentUser, (err, foundUser) => {
-            if (err) return res.status(500).json({
+        db.User.findById(req.session.currentUser, (error, foundUser) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
-            db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, async (err, updatedUser) => {
+            db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, async (error, updatedUser) => {
         
-                if (err) return res.status(500).json({
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
         
                 let updatedUserData = updatedUser;
     
-                if (req.body.bio && req.body.userName) {
+                if (req.body.bio && req.body.username) {
                     updatedUserData.bio = req.body.bio;
-                    updatedUserData.userName = req.body.userName;
+                    updatedUserData.username = req.body.username;
 
                 } else if (req.body.bio) {
                     updatedUserData.bio = req.body.bio;
 
-                } else if (req.body.userName) {
-                    updatedUserData.userName = req.body.userName;
+                } else if (req.body.username) {
+                    updatedUserData.username = req.body.username;
 
                 } else if (req.body.profileImage) {
                     updatedUserData.profile_image = req.body.profileImage;
                     
                 };
     
-                req.session.currentUser.userName = req.body.userName;
+                req.session.currentUser.username = req.body.username;
     
-                if (req.body.userName) {
+                if (req.body.username) {
 
-                    await db.Clip.find({ poster: foundUser._id }, (err, foundClips) => {
-                        if (err) return res.status(500).json({
+                    await db.Clip.find({ poster: foundUser._id }, (error, foundClips) => {
+                        if (error) return res.status(500).json({
                             status: 500,
-                            error: err,
+                            error,
                             message: 'Something went wrong, please try again.'
                         });
 
                         foundClips.forEach(clip => {
-                            clip.poster_name = req.body.userName;
+                            clip.poster_name = req.body.username;
                             clip.save();
                         });
                     });
     
-                    await db.Comment.find({ author_name: foundUser.userName }, (err, foundComments) => {
-                        if (err) return res.status(500).json({
+                    await db.Comment.find({ author_name: foundUser.username }, (error, foundComments) => {
+                        if (error) return res.status(500).json({
                             status: 500,
-                            error: err,
+                            error,
                             message: 'Something went wrong, please try again.'
                         });
         
                         foundComments.forEach(foundComment => {
-                            foundComment.author_name = req.body.userName;
+                            foundComment.author_name = req.body.username;
                             foundComment.replies.forEach(reply => {
-                                if (reply.author_name === foundUser.userName) {
-                                    reply.author_name = req.body.userName
+                                if (reply.author_name === foundUser.username) {
+                                    reply.author_name = req.body.username
                                 };
                             });
                             foundComment.save();
                         });
                     });
     
-                    await db.Reply.find({ author_name: foundUser.userName }, (err, foundReplies) => {
-                        if (err) return res.status(500).json({
+                    await db.Reply.find({ author_name: foundUser.username }, (error, foundReplies) => {
+                        if (error) return res.status(500).json({
                             status: 500,
-                            erro: err,
+                            error,
                             message: 'Something went wrong, please try again.'
                         });
     
     
                         foundReplies.forEach(foundReply => {
-                            foundReply.author_name = req.body.userName;
+                            foundReply.author_name = req.body.username;
                             foundReply.save();
                         });
                     });
@@ -248,45 +249,46 @@ const editUserPassword = (req, res) => {
     if (Boolean(errors.length)) {
         return res.status(400).json({
             status: 400,
-            errors: errors,
+            errors,
             message: 'Please check all fields.'
         });
     };
 
-    db.User.findById(req.session.currentUser._id, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findById(req.session.currentUser._id, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
-        bcrypt.compare(oldPassword, foundUser.password, (err, isMatch) => {
-            if (err) return res.status(500).json({
+        bcrypt.compare(oldPassword, foundUser.password, (error, isMatch) => {
+            if (error) return res.status(500).json({
                 status: 500,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
             if (isMatch) {
 
-                bcrypt.genSalt(10, (err, salt) => {
-                    if (err) return res.status(500).json({
+                bcrypt.genSalt(10, (error, salt) => {
+                    if (error) return res.status(500).json({
                         status: 500,
-                        errors: err,
+                        error,
                         message: 'Something went wrong, please try again.'
                     });
 
-                    bcrypt.hash(req.body.password, salt, (err, newHash) => {
-                        if (err) return res.status(500).json({
+                    bcrypt.hash(req.body.password, salt, (error, newHash) => {
+                        if (error) return res.status(500).json({
                             status: 500,
-                            errors: err,
+                            error,
                             message: 'Something went wrong, please try again.'
                         });
 
                         foundUser.password = newHash;
-                        foundUser.save((err) => {
-                            if (err) return res.status(500).json({
+                        foundUser.save((error) => {
+                            if (error) return res.status(500).json({
                                 status: 500,
-                                errors: err,
+                                error,
                                 message: 'Something went wrong, please try again.'
                             });
 
@@ -300,7 +302,7 @@ const editUserPassword = (req, res) => {
             } else {
                 return res.status(400).json({
                     status: 400,
-                    errors: [{ message: 'Password is incorrect. '}],
+                    error: { message: 'Password is incorrect. '},
                     message: 'Please try again.'
                 });
             };
@@ -310,24 +312,24 @@ const editUserPassword = (req, res) => {
 
 const editUserEmail = (req, res) => {
 
-    db.User.findOne({ email: req.body.email }, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findOne({ email: req.body.email }, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         if (foundUser) return res.status(400).json({
             status: 400,
-            errors: [{ message: 'Email already registered' }],
+            error: { message: 'Email already registered' },
             message: 'Please try again.'
         });
 
-        db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (err, updatedUser) => {
+        db.User.findByIdAndUpdate(req.session.currentUser._id, req.body, (error, updatedUser) => {
     
-            if (err) return res.status(500).json({
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
         
@@ -342,9 +344,10 @@ const editUserEmail = (req, res) => {
 
 const deleteUser = (req, res) => {
 
-    db.User.findByIdAndDelete(req.session.currentUser._id, (err, deletedUser) => {
-        if (err) return res.status(500).json({
+    db.User.findByIdAndDelete(req.session.currentUser._id, (error, deletedUser) => {
+        if (error) return res.status(500).json({
             status: 500,
+            error,
             message: 'Something went wrong, please try again.'
         });
 

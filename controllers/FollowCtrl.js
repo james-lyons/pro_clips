@@ -3,43 +3,38 @@
 const db = require('../models');
 
 // ----------------------- Controllers ----------------------- //
-// idk what's gonna go here jajaja
-
-const indexFriends = (req, res) => {
-    console.log('hello');
-};
 
 const followUser = (req, res) => {
 
-    db.User.findOne({ userName: req.params.userName }, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findOne({ username: req.params.username }, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
-        db.User.findById(req.session.currentUser._id, (err, foundCurrentUser) => {
-            if (err) return res.status(500).json({
+        db.User.findById(req.session.currentUser._id, (error, foundCurrentUser) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
             foundUser.followers.push(foundCurrentUser._id);
             foundCurrentUser.following.push(foundUser._id);
 
-            foundUser.save((err) => {
-                if (err) return res.status(500).json({
+            foundUser.save((error) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
             });
 
-            foundCurrentUser.save((err) => {
-                if (err) return res.status(500).json({
+            foundCurrentUser.save((error) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
 
@@ -55,17 +50,17 @@ const followUser = (req, res) => {
 
 const unfollowUser = (req, res) => {
 
-    db.User.findOne({ userName: req.params.userName }, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findOne({ username: req.params.username }, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
-        db.User.findById(req.session.currentUser._id, (err, foundCurrentUser) => {
-            if (err) return res.status(500).json({
+        db.User.findById(req.session.currentUser._id, (error, foundCurrentUser) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
@@ -82,18 +77,18 @@ const unfollowUser = (req, res) => {
             foundUser.followers = newFollowerList;
             foundCurrentUser.following = newFollowingList;
 
-            foundUser.save((err) => {
-                if (err) return res.status(500).json({
+            foundUser.save((error) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
             });
 
-            foundCurrentUser.save((err) => {
-                if (err) return res.status(500).json({
+            foundCurrentUser.save((error) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
 
@@ -108,7 +103,7 @@ const unfollowUser = (req, res) => {
 };
 
 const fetchFollowers = (req, res) => {
-    db.User.findOne({ userName: req.params.userName }, async (error, foundUser) => {
+    db.User.findOne({ username: req.params.username }, async (error, foundUser) => {
         if (error) return res.status(500).json({
             status: 500,
             error,
@@ -127,7 +122,7 @@ const fetchFollowers = (req, res) => {
                     });
 
                     let follower = {
-                        userName: foundFollower.userName,
+                        username: foundFollower.username,
                         profile_image: foundFollower.profile_image
                     };
 
@@ -153,7 +148,7 @@ const fetchFollowers = (req, res) => {
 };
 
 const fetchFollowingList = (req, res) => {
-    db.User.findOne({ userName: req.params.userName }, async (error, foundUser) => {
+    db.User.findOne({ username: req.params.username }, async (error, foundUser) => {
         if (error) return res.status(500).json({
             status: 500,
             error,
@@ -172,7 +167,7 @@ const fetchFollowingList = (req, res) => {
                     });
 
                     let followedUser = {
-                        userName: foundFollowedUser.userName,
+                        username: foundFollowedUser.username,
                         profile_image: foundFollowedUser.profile_image
                     };
 
@@ -198,7 +193,6 @@ const fetchFollowingList = (req, res) => {
 };
 
 module.exports = {
-    indexFriends,
     followUser,
     unfollowUser,
     fetchFollowers,

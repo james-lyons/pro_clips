@@ -6,17 +6,17 @@ const aws = require('aws-sdk');
 // ----------------------- Controllers ----------------------- //
 
 const indexUserClips = (req, res) => {
-    db.User.findOne({ userName: req.params.username }, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findOne({ username: req.params.username }, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
         
-        db.Clip.find({ poster: foundUser._id }, (err, foundClips) => {
-            if (err) return res.status(500).json({
+        db.Clip.find({ poster: foundUser._id }, (error, foundClips) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
     
@@ -31,10 +31,10 @@ const indexUserClips = (req, res) => {
 
 const indexGameClips = (req, res) => {
 
-    db.Clip.find({ game: req.params.game}, (err, foundClips) => {
-        if (err) return res.status(500).json({
+    db.Clip.find({ game: req.params.game }, (error, foundClips) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
@@ -53,60 +53,60 @@ const indexBrowseClips = async (req, res) => {
     let Valorant;
     let Fortnite;
 
-    await db.Clip.find({ "game": "Apex Legends" }, (err, foundClips) => {
-        if (err) return res.status(500).json({
+    await db.Clip.find({ "game": "Apex Legends" }, (error, foundClips) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         ApexLegends = foundClips;
 
-    }).limit(3);
+    }).limit(4);
 
-    await db.Clip.find({"game": "C.O.D. Warzone"}, (err, foundClips) => {
-        if (err) return res.status(500).json({
+    await db.Clip.find({ "game": "Call of Duty: Warzone" }, (error, foundClips) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         CODWarzone = foundClips;
 
-    }).limit(3);
+    }).limit(4);
 
-    await db.Clip.find({"game": "League of Legends"}, (err, foundClips) => {
-        if (err) return res.status(500).json({
+    await db.Clip.find({ "game": "League of Legends" }, (error, foundClips) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         LeagueOfLegends = foundClips;
 
-    }).limit(3);
+    }).limit(4);
 
-    await db.Clip.find({"game": "Valorant"}, (err, foundClips) => {
-        if (err) return res.status(500).json({
+    await db.Clip.find({ "game": "Valorant" }, (error, foundClips) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         Valorant = foundClips;
 
-    }).limit(3);
+    }).limit(4);
 
-    await db.Clip.find({"game": "Fortnite"}, (err, foundClips) => {
-        if (err) return res.status(500).json({
+    await db.Clip.find({ "game": "Fortnite" }, (error, foundClips) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         Fortnite = foundClips;
 
-    }).limit(3);
+    }).limit(4);
 
     let browsedClips = {
         ApexLegends,
@@ -125,10 +125,10 @@ const indexBrowseClips = async (req, res) => {
 
 const showClip = (req, res) => {
 
-    db.Clip.findById(req.params.id, (err, foundClip) => {
-        if (err) return res.status(500).json({
+    db.Clip.findById(req.params.id, (error, foundClip) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
@@ -141,12 +141,36 @@ const showClip = (req, res) => {
 };
 
 const uploadClip = (req, res) => {
+    
+    db.User.findById(req.session.currentUser, (error, foundUser) => {
+        if (error) return res.status(404).json({
+            status: 500,
+            message: 'Something went wrong, please try again.'
+        });
 
-    db.User.findById(req.session.currentUser, (err, foundUser) => {
+        const { file } = req;
+        const { game, title } = req.body;
 
-        let file = req.file;
-        let username = req.session.currentUser.userName;
-        let title = req.body.title;
+        if (!file) {
+            return res.status(400).json({
+                status: 400,
+                error: { message: 'Please select a file' }
+            });
+
+        } else if (!game) {
+            return res.status(400).json({
+                status: 400,
+                error: { message: 'Please select a game name' }
+            });
+
+        } else if (!title) {
+            return res.status(400).json({
+                status: 400,
+                error: { message: 'Please include a title' }
+            });
+        };
+
+        let username = req.session.currentUser.username;
         let currentDate = Date.now();
         let newKey = username + '.' + currentDate;
         let newUrl = "https://s3-us-west-1.amazonaws.com/pro.clips/" + newKey;
@@ -164,27 +188,27 @@ const uploadClip = (req, res) => {
             ACL: "public-read"
         };
 
-        s3bucket.upload(params, (err, data) => {
-            if (err) return res.status(500).json({ 
+        s3bucket.upload(params, (error, data) => {
+            if (error) return res.status(500).json({ 
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
         });
 
         let newClip = {
-            poster: foundUser._id,
-            poster_name: username,
-            title: title,
+            game: game,
             key: newKey,
             url: newUrl,
-            game: req.body.game
+            title: title,
+            poster: foundUser._id,
+            poster_name: username,
         };
 
-        db.Clip.create(newClip, (err, createdClip) => {
-            if (err) return res.status(500).json({
+        db.Clip.create(newClip, (error, createdClip) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
@@ -204,8 +228,8 @@ const editClip = (req, res) => {
     db.Clip.findByIdAndUpdate(req.params.id, req.body, (error, foundClip) => {
         if (error) return res.status(500).json({
             status: 500,
+            error,
             message: 'Something went wrong, please try again.',
-            error
         });
 
         const updatedClip = foundClip;
@@ -221,12 +245,12 @@ const editClip = (req, res) => {
 
 const deleteClip = (req, res) => {
 
-    db.Clip.findByIdAndDelete(req.params.id, (err, deletedClip) => {
+    db.Clip.findByIdAndDelete(req.params.id, (error, deletedClip) => {
 
-        db.User.findById(req.session.currentUser._id, (err, foundUser) => {
-            if (err) return res.status(500).json({
+        db.User.findById(req.session.currentUser._id, (error, foundUser) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
@@ -247,10 +271,10 @@ const deleteClip = (req, res) => {
             Key: deletedClip.key
         };
             
-        s3bucket.deleteObject(params, (err, data) => {
-            if (err) return res.status(500).json({
+        s3bucket.deleteObject(params, (error, data) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
@@ -266,10 +290,10 @@ const likeClip = (req, res) => {
     const userId = req.session.currentUser._id;
     const clipId = req.params.id;
 
-    db.User.findById(userId, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findById(userId, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
@@ -280,27 +304,27 @@ const likeClip = (req, res) => {
         };
 
         foundUser.liked_clips.push(clipId);
-        foundUser.save((err) => {
-            if (err) return res.status(500).json({
+        foundUser.save((error) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
         });
 
-        db.Clip.findById(clipId, (err, foundClip) => {
-            if (err) return res.status(500).json({
+        db.Clip.findById(clipId, (error, foundClip) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
     
             foundClip.likes.push(userId);
 
-            foundClip.save((err) => {
-                if (err) return res.status(500).json({
+            foundClip.save((error) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
             });
@@ -318,38 +342,38 @@ const unlikeClip = (req, res) => {
     const userId = req.session.currentUser._id;
     const clipId = req.params.id;
 
-    db.User.findById(userId, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findById(userId, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
         let newClipLikes = foundUser.liked_clips.filter(like => like.toString() !== clipId);
         foundUser.liked_clips = newClipLikes;
 
-        foundUser.save((err) => {
-            if (err) return res.status(500).json({
+        foundUser.save((error) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
         });
 
-        db.Clip.findById(clipId, (err, foundClip) => {
-            if (err) return res.status(500).json({
+        db.Clip.findById(clipId, (error, foundClip) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
     
             let newLikesArr = foundClip.likes.filter(like => like.toString() !== userId);
             foundClip.likes = newLikesArr;
     
-            foundClip.save((err) => {
-                if (err) return res.status(500).json({
+            foundClip.save((error) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
             });

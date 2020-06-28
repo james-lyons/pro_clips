@@ -5,10 +5,10 @@ const db = require('../models');
 // ----------------------- Controllers ----------------------- //
 
 const indexComments = (req, res) => {
-    db.Comment.find({ clip_id: req.params.clipId }, (err, foundComments) => {
-        if (err) return res.status(500).json({
+    db.Comment.find({ clip_id: req.params.clipId }, (error, foundComments) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
@@ -24,23 +24,23 @@ const createComment = (req, res) => {
 
     const currentUser = req.session.currentUser;
     const comment = {
-        author_name: currentUser.userName,
+        author_name: currentUser.username,
         comment_text: req.body.commentText,
         author_id: currentUser._id,
         clip_id: req.body.clipId
     };
 
-    db.Comment.create(comment, async (err, createdComment) => {
-        if (err) return res.status(500).json({
+    db.Comment.create(comment, async (error, createdComment) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
-        await db.User.findById(currentUser._id, (err, foundUser) => {
-            if (err) return res.status(500).json({
+        await db.User.findById(currentUser._id, (error, foundUser) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                erorr: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
@@ -48,10 +48,10 @@ const createComment = (req, res) => {
             foundUser.save();
         });
 
-        await db.Clip.findById(comment.clip_id, (err, foundClip) => {
-            if (err) return res.status(500).json({
+        await db.Clip.findById(comment.clip_id, (error, foundClip) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
 
@@ -68,25 +68,25 @@ const createComment = (req, res) => {
 
 const deleteComment = (req, res) => {
 
-    db.Comment.findByIdAndDelete(req.params.id, async (err, deletedComment) => {
-        if (err) return res.status(500).json({
+    db.Comment.findByIdAndDelete(req.params.id, async (error, deletedComment) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again'
         });
 
-        await db.Reply.deleteMany({ comment_id: req.params.id }, (err, deletedReplies) => {
-            if (err) return res.status(500).json({
+        await db.Reply.deleteMany({ comment_id: req.params.id }, (error, deletedReplies) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
         });
 
-        await db.User.findById(req.session.currentUser._id, (err, foundUser) => {
-            if (err) return res.status(500).json({
+        await db.User.findById(req.session.currentUser._id, (error, foundUser) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
     
@@ -96,10 +96,10 @@ const deleteComment = (req, res) => {
             foundUser.save();
         });
 
-        await db.Clip.findById(deletedComment.clip_id, (err, foundClip) => {
-            if (err) return res.status(500).json({
+        await db.Clip.findById(deletedComment.clip_id, (error, foundClip) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
         
@@ -122,13 +122,10 @@ const likeComment = (req, res) => {
     const userId = req.session.currentUser._id;
     const commentId = req.params.id;
 
-    console.log('Hello from likeComment 1a: userId', userId);
-    console.log('Hello from likeComment 1b: commentId', commentId);
-
-    db.User.findById(userId, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findById(userId, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
 
@@ -139,27 +136,27 @@ const likeComment = (req, res) => {
         };
 
         foundUser.liked_comments.push(commentId);
-        foundUser.save((err) => {
-            if (err) return res.status(500).json({
+        foundUser.save((error) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
         });
 
-        db.Comment.findById(commentId, (err, foundComment) => {
-            if (err) return res.status(500).json({
+        db.Comment.findById(commentId, (error, foundComment) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
     
             foundComment.likes.push(userId);
 
-            foundComment.save((err) => {
-                if (err) return res.status(500).json({
+            foundComment.save((error) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
             });
@@ -176,49 +173,38 @@ const unlikeComment = (req, res) => {
     const userId = req.session.currentUser._id;
     const commentId = req.params.id;
 
-    console.log('Hello from unlikeComment 1a: userId', userId);
-    console.log('Hello from unlikeComment 1b: commentId', commentId);
-
-    db.User.findById(userId, (err, foundUser) => {
-        if (err) return res.status(500).json({
+    db.User.findById(userId, (error, foundUser) => {
+        if (error) return res.status(500).json({
             status: 500,
-            error: err,
+            error,
             message: 'Something went wrong, please try again.'
         });
-
-        console.log('Hello from unlikeComment 2: commentId', foundUser);
 
         let newCommentLikes = foundUser.liked_comments.filter(comment => comment.toString() !== commentId);
         foundUser.liked_comments = newCommentLikes;
 
-        console.log('Hello from unlikeComment 3: foundUserComments', foundUser.liked_comments);
-
-        foundUser.save((err) => {
-            if (err) return res.status(500).json({
+        foundUser.save((error) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
         });
 
-        db.Comment.findById(commentId, (err, foundComment) => {
-            if (err) return res.status(500).json({
+        db.Comment.findById(commentId, (error, foundComment) => {
+            if (error) return res.status(500).json({
                 status: 500,
-                error: err,
+                error,
                 message: 'Something went wrong, please try again.'
             });
-
-            console.log('Hello from unlikeComment 4: foundComment', foundComment);
     
             let newLikesArr = foundComment.likes.filter(like => like.toString() !== userId);
             foundComment.likes = newLikesArr;
-
-            console.log('Hello from unlikeComment 5: foundComment.likes', foundComment.likes);
     
-            foundComment.save((err) => {
-                if (err) return res.status(500).json({
+            foundComment.save((error) => {
+                if (error) return res.status(500).json({
                     status: 500,
-                    error: err,
+                    error,
                     message: 'Something went wrong, please try again.'
                 });
             });
