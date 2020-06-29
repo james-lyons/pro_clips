@@ -5,23 +5,6 @@ const db = require('../models');
 
 // ----------------------- Controllers ----------------------- //
 
-const fetchUsers = (req, res) => {
-
-    db.User.find({}, (error, foundUsers) => {
-        if (error) return res.status(500).json({
-            status: 500,
-            error,
-            message: 'Something went wrong, please try again.'
-        });
-
-        res.status(200).json({
-            status: 200,
-            message: 'Success',
-            data: foundUsers
-        });
-    });
-};
-
 const fetchCurrentUser = (req, res) => {
 
     db.User.findById(req.session.currentUser._id, (error, foundUser) => {
@@ -417,9 +400,8 @@ const deleteUser = (req, res) => {
 };
 
 module.exports = {
-    fetchUsers,
-    fetchCurrentUser,
     fetchUser,
+    fetchCurrentUser,
     editUserProfile,
     editUserEmail,
     editUserPassword,

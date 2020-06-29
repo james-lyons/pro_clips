@@ -388,12 +388,12 @@ const unlikeClip = (req, res) => {
 };
 
 module.exports = {
+    showClip,
     indexUserClips,
     indexGameClips,
     indexBrowseClips,
-    showClip,
-    uploadClip,
     editClip,
+    uploadClip,
     deleteClip,
     likeClip,
     unlikeClip

@@ -48,6 +48,7 @@ app.use('/follow', routes.follow);
 app.use('/comments', routes.comments);
 app.use('/replies', routes.replies);
 app.use('/clips', routes.clips);
+app.use('/reports', routes.reports);
 
 
 // --------------------------------- Server Listener ------------------------------ //

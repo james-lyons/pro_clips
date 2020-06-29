@@ -119,8 +119,6 @@ const login = (req, res) => {
                     profile_image: foundUser.profile_image
                 };
 
-                console.log('Hello from login: currentUser', req.session.currentUser);
-
                 return res.status(200).json({
                     status: 200,
                     message: 'Successfully logged in.',
