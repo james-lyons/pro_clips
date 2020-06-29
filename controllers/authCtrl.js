@@ -113,7 +113,13 @@ const login = (req, res) => {
             });
 
             if (isMatch) {
-                req.session.currentUser = { _id: foundUser._id, username: foundUser.username };
+                req.session.currentUser = {
+                    _id: foundUser._id,
+                    username: foundUser.username,
+                    profile_image: foundUser.profile_image
+                };
+
+                console.log('Hello from login: currentUser', req.session.currentUser);
 
                 return res.status(200).json({
                     status: 200,

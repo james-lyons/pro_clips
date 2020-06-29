@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const replySchema = new Schema({
-    author_name: {
+    reply_text: {
         type: String,
         required: true
     },
-    reply_text: {
-        type: String,
+    comment_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
         required: true
     },
     author_id: {
@@ -15,9 +16,12 @@ const replySchema = new Schema({
         ref: 'User',
         required: true
     },
-    comment_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Comment',
+    author_name: {
+        type: String,
+        required: true
+    },
+    author_profile_image: {
+        type: String,
         required: true
     },
     likes:[{

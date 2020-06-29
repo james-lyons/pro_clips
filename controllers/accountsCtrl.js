@@ -41,8 +41,7 @@ const fetchCurrentUser = (req, res) => {
 };
 
 const fetchUser = (req, res) => {
-    console.log(req.params.username)
-
+    
     db.User.findOne({ username: req.params.username }, (error, foundUser) => {
 
         if (error) return res.status(500).json({
@@ -170,6 +169,65 @@ const editUserProfile = (req,res) => {
                 };
     
                 req.session.currentUser.username = req.body.username;
+
+                if (req.body.profile_image) {    
+                    await db.Comment.find({ author_name: foundUser.username }, (error, foundComments) => {
+                        if (error) return res.status(500).json({
+                            status: 500,
+                            error,
+                            message: 'Something went wrong, please try again.'
+                        });
+
+                        foundComments.forEach(foundComment => {
+                            foundComment.author_profile_image = req.body.profile_image;
+                            foundComment.replies.forEach(reply => {
+                                if (reply.author_profile_image === foundUser.profile_image) {
+                                    reply.author_profile_image = req.body.profile_image
+                                };
+                            });
+                            foundComment.save();
+                        });
+                    });
+
+                    await foundUser.replies.forEach(reply => {
+
+                        db.Reply.findById(reply, (error, foundReply) => {
+                            if (error) return res.status(500).json({
+                                status: 500,
+                                error,
+                                message: 'Something went wrong, please try again.'
+                            });
+
+                            db.Comment.findById(foundReply.comment_id, (error, foundComment) => {
+                                if (error) return res.status(500).json({
+                                    status: 500,
+                                    error,
+                                    message: 'Something went wrong, please try again.'
+                                });
+    
+                                foundComment.replies.forEach(reply => {
+                                    if (reply.author_name === foundUser.username) {
+                                        reply.author_profile_image = req.body.profile_image;
+                                    };
+                                    foundComment.save();
+                                });
+                            });
+                        });
+                    });
+    
+                    await db.Reply.find({ author_name: foundUser.username }, (error, foundReplies) => {
+                        if (error) return res.status(500).json({
+                            status: 500,
+                            error,
+                            message: 'Something went wrong, please try again.'
+                        });
+    
+                        foundReplies.forEach(foundReply => {
+                            foundReply.author_profile_image = req.body.profile_image;
+                            foundReply.save();
+                        });
+                    });
+                };
     
                 if (req.body.username) {
 

@@ -23,11 +23,13 @@ const indexComments = (req, res) => {
 const createComment = (req, res) => {
 
     const currentUser = req.session.currentUser;
+    const { clipId, commentText } = req.body;
     const comment = {
-        author_name: currentUser.username,
-        comment_text: req.body.commentText,
+        clip_id: clipId,
+        comment_text: commentText,
         author_id: currentUser._id,
-        clip_id: req.body.clipId
+        author_name: currentUser.username,
+        author_profile_image: currentUser.profile_image,
     };
 
     db.Comment.create(comment, async (error, createdComment) => {
@@ -48,6 +50,7 @@ const createComment = (req, res) => {
             foundUser.save();
         });
 
+
         await db.Clip.findById(comment.clip_id, (error, foundClip) => {
             if (error) return res.status(500).json({
                 status: 500,
@@ -58,6 +61,7 @@ const createComment = (req, res) => {
             foundClip.comments.push(createdComment._id);
             foundClip.save();
         });
+
 
         return res.status(200).json({
             status: 200,

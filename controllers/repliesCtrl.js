@@ -23,11 +23,13 @@ const indexReplies = (req, res) => {
 const createReply = (req, res) => {
 
     const currentUser = req.session.currentUser;
+    const { replyText } = req.body;
     const reply = {
-        author_name: currentUser.username,
-        reply_text: req.body.replyText,
+        reply_text: replyText,
+        comment_id: req.params.id,
         author_id: currentUser._id,
-        comment_id: req.params.id
+        author_name: currentUser.username,
+        author_profile_image: currentUser.profile_image
     };
 
     db.Reply.create(reply, async (error, createdReply) => {

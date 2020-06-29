@@ -3,21 +3,25 @@ const Schema = mongoose.Schema;
 const Reply = require('./Reply');
 
 const commentSchema = new Schema({
-    author_name: {
-        type: String,
-        required: true
-    },
     comment_text: {
         type: String,
+    },
+    clip_id: {
+        type: Schema.Types.ObjectId,
+        ref: 'Clip',
+        required: true
     },
     author_id: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    clip_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Clip',
+    author_name: {
+        type: String,
+        required: true
+    },
+    author_profile_image: {
+        type: String,
         required: true
     },
     replies: [ Reply.schema ],
