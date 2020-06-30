@@ -4,20 +4,17 @@ const db = require('../models');
 
 // ----------------------- Controllers ----------------------- //
 
-const reportClip = () => {
-    console.log('Hello from ReportClip 1: req.body', req.body);
+const reportClip = (req, res) => {
 
-    const { clip, offender, reporter, report_reason, report_description } = req.body;
+    const { clip_id, offender, reporter, report_reason, report_description } = req.body;
 
     const report = {
-        clip,
+        clip_id,
         offender,
         reporter,
         report_reason,
         report_description
     };
-
-    console.log('Hello from ReportClip 2: report', report);
 
     db.ReportClip.create(report , (error, createdReport) => {
         if (error) return res.status(500).json({
@@ -26,8 +23,6 @@ const reportClip = () => {
             messag: 'Something went wrong. Please try again.'
         });
 
-        console.log('Hello from ReportClip 3: createdReport', createdReport);
-
         return res.status(200).json({
             status: 200,
             message: 'Success'
@@ -35,8 +30,7 @@ const reportClip = () => {
     });
 };
 
-const reportUser = () => {
-    console.log('Hello from ReportUser 1: req.body', req.body);
+const reportUser = (req, res) => {
 
     const { offender, reporter, report_reason, report_description } = req.body;
 
@@ -47,16 +41,12 @@ const reportUser = () => {
         report_description
     };
 
-    console.log('Hello from ReportUser 2: report', report);
-
     db.ReportUser.create(report , (error, createdReport) => {
         if (error) return res.status(500).json({
             status: 500,
             error,
             messag: 'Something went wrong. Please try again.'
         });
-
-        console.log('Hello from ReportUser 3: createdReport', createdReport);
 
         return res.status(200).json({
             status: 200,
@@ -65,13 +55,12 @@ const reportUser = () => {
     });
 };
 
-const reportReply = () => {
-    console.log('Hello from ReportReply 1: req.body', req.body);
+const reportReply = (req, res) => {
 
     const {
         offender,
         reporter,
-        reply,
+        reply_id,
         report_text,
         report_reason,
         report_description
@@ -80,13 +69,11 @@ const reportReply = () => {
     const report = {
         offender,
         reporter,
-        reply,
+        reply_id,
         report_text,
         report_reason,
         report_description
     };
-
-    console.log('Hello from ReportReply 2: report', report);
 
     db.ReportReply.create(report , (error, createdReport) => {
         if (error) return res.status(500).json({
@@ -95,8 +82,6 @@ const reportReply = () => {
             messag: 'Something went wrong. Please try again.'
         });
 
-        console.log('Hello from ReportReply 3: createdReport', createdReport);
-
         return res.status(200).json({
             status: 200,
             message: 'Success'
@@ -104,13 +89,12 @@ const reportReply = () => {
     });
 };
 
-const reportComment = () => {
-    console.log('Hello from ReportComment 1: req.body', req.body);
+const reportComment = (req, res) => {
 
     const {
         offender,
         reporter,
-        comment,
+        comment_id,
         report_text,
         report_reason,
         report_description
@@ -119,13 +103,11 @@ const reportComment = () => {
     const report = {
         offender,
         reporter,
-        comment,
+        comment_id,
         report_text,
         report_reason,
         report_description
     };
-
-    console.log('Hello from ReportComment 2: report', report);
 
     db.ReportComment.create(report , (error, createdReport) => {
         if (error) return res.status(500).json({
@@ -133,8 +115,6 @@ const reportComment = () => {
             error,
             messag: 'Something went wrong. Please try again.'
         });
-
-        console.log('Hello from ReportComment 3: createdReport', createdReport);
 
         return res.status(200).json({
             status: 200,

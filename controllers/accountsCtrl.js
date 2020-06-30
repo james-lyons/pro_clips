@@ -50,6 +50,7 @@ const fetchUser = (req, res) => {
                 if (foundCurrentUser.following.includes(foundUser._id.toString())) {
 
                     const userData = {
+                        _id: foundUser._id,
                         bio: foundUser.bio,
                         username: foundUser.username,
                         profile_image: foundUser.profile_image,
@@ -67,6 +68,7 @@ const fetchUser = (req, res) => {
 
                 } else {
                     const userData = {
+                        _id: foundUser._id,
                         bio: foundUser.bio,
                         username: foundUser.username,
                         profile_image: foundUser.profile_image,
@@ -86,6 +88,7 @@ const fetchUser = (req, res) => {
             
         } else {
             const userData = {
+                _id: foundUser._id,
                 bio: foundUser.bio,
                 username: foundUser.username,
                 profile_image: foundUser.profile_image,

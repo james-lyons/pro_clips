@@ -12,7 +12,7 @@ const reportCommentSchema = new Schema({
         ref: 'User',
         required: true
     },
-    comment: {
+    comment_id: {
         type: Schema.Types.ObjectId,
         ref: 'Comment',
         required: true

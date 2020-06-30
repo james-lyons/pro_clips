@@ -12,7 +12,7 @@ const reportReplySchema = new Schema({
         ref: 'User',
         required: true
     },
-    reply: {
+    reply_id: {
         type: Schema.Types.ObjectId,
         ref: 'Reply',
         required: true

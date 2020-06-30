@@ -12,7 +12,7 @@ const reportClipSchema = new Schema({
         ref: 'User',
         required: true
     },
-    clip: {
+    clip_id: {
         type: Schema.Types.ObjectId,
         ref: 'Clip',
         required: true
