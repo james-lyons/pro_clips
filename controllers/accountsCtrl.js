@@ -157,120 +157,54 @@ const editUserProfile = (req,res) => {
                 req.session.currentUser.username = req.body.username;
 
                 if (req.body.profile_image) {    
-                    await db.Comment.find({ author_name: foundUser.username }, (error, foundComments) => {
+
+                    await db.Comment.updateMany({ author_id: foundUser._id }, { author_profile_image: req.body.profile_image }, (error, updatedComments) => {
                         if (error) return res.status(500).json({
                             status: 500,
                             error,
-                            message: 'Something went wrong, please try again.'
-                        });
-
-                        foundComments.forEach(foundComment => {
-                            foundComment.author_profile_image = req.body.profile_image;
-                            foundComment.replies.forEach(reply => {
-                                if (reply.author_profile_image === foundUser.profile_image) {
-                                    reply.author_profile_image = req.body.profile_image
-                                };
-                            });
-                            foundComment.save();
                         });
                     });
 
-                    await foundUser.replies.forEach(reply => {
-
-                        db.Reply.findById(reply, (error, foundReply) => {
-                            if (error) return res.status(500).json({
-                                status: 500,
-                                error,
-                                message: 'Something went wrong, please try again.'
-                            });
-
-                            db.Comment.findById(foundReply.comment_id, (error, foundComment) => {
-                                if (error) return res.status(500).json({
-                                    status: 500,
-                                    error,
-                                    message: 'Something went wrong, please try again.'
-                                });
-    
-                                foundComment.replies.forEach(reply => {
-                                    if (reply.author_name === foundUser.username) {
-                                        reply.author_profile_image = req.body.profile_image;
-                                    };
-                                    foundComment.save();
-                                });
-                            });
-                        });
-                    });
-    
-                    await db.Reply.find({ author_name: foundUser.username }, (error, foundReplies) => {
+                    await db.Reply.updateMany({ author_id: foundUser._id}, { author_profile_image: req.body.profile_image }, (error, updatedReplies) => {
                         if (error) return res.status(500).json({
                             status: 500,
                             error,
-                            message: 'Something went wrong, please try again.'
-                        });
-    
-                        foundReplies.forEach(foundReply => {
-                            foundReply.author_profile_image = req.body.profile_image;
-                            foundReply.save();
                         });
                     });
                 };
     
                 if (req.body.username) {
 
-                    await db.Clip.find({ poster: foundUser._id }, (error, foundClips) => {
+                    await db.Clip.updateMany({ poster: foundUser._id }, { poster_name: req.body.username }, (error, updatedClips) => {
                         if (error) return res.status(500).json({
                             status: 500,
                             error,
-                            message: 'Something went wrong, please try again.'
                         });
+                    });
 
-                        foundClips.forEach(clip => {
-                            clip.poster_name = req.body.username;
-                            clip.save();
-                        });
-                    });
-    
-                    await db.Comment.find({ author_name: foundUser.username }, (error, foundComments) => {
+                    await db.Comment.updateMany({ author_id: foundUser._id }, { author_name: req.body.username }, (error, updatedComments) => {
                         if (error) return res.status(500).json({
                             status: 500,
                             error,
-                            message: 'Something went wrong, please try again.'
-                        });
-        
-                        foundComments.forEach(foundComment => {
-                            foundComment.author_name = req.body.username;
-                            foundComment.replies.forEach(reply => {
-                                if (reply.author_name === foundUser.username) {
-                                    reply.author_name = req.body.username
-                                };
-                            });
-                            foundComment.save();
                         });
                     });
-    
-                    await db.Reply.find({ author_name: foundUser.username }, (error, foundReplies) => {
+
+                    await db.Reply.updateMany({ author_id: foundUser._id }, { author_name: req.body.username }, (error, updatedReplies) => {
                         if (error) return res.status(500).json({
                             status: 500,
                             error,
-                            message: 'Something went wrong, please try again.'
-                        });
-    
-    
-                        foundReplies.forEach(foundReply => {
-                            foundReply.author_name = req.body.username;
-                            foundReply.save();
                         });
                     });
-                };
         
                 res.status(202).json({
                     status: 202,
                     message: 'Successfully edited user profile',
                     data: updatedUserData
                 });
-            });
+            };
         }); 
     });
+});
 };
 
 const editUserPassword = (req, res) => { 

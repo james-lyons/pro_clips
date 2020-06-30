@@ -57,9 +57,8 @@ const createReply = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
 
-            foundComment.replies.push(createdReply);
+            foundComment.replies.push(createdReply._id);
             foundComment.save();
-
         });
 
         return res.status(200).json({
@@ -103,7 +102,7 @@ const deleteReply = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
     
-            let newRepliesArr = foundComment.replies.filter(reply => reply._id.toString() !== req.params.id);
+            let newRepliesArr = foundComment.replies.filter(reply => reply.toString() !== req.params.id);
     
             foundComment.replies = newRepliesArr;
             foundComment.save((error) => {
@@ -164,35 +163,10 @@ const likeReply = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
             });
-            
-            db.Comment.findById(foundReply.comment_id, (error, foundComment) => {
-                if (error) return res.status(500).json({
-                    status: 500,
-                    error,
-                    message: 'Something went wrong, please try again.'
-                });
 
-                foundComment.replies.forEach(reply => {
-                    if (reply._id.toString() === replyId) {
-                        reply.likes.push(userId);
-                    };
-                });
-
-                foundComment.save();
-                
-                db.Comment.find({ clip_id: foundComment.clip_id }, (error, foundComments) => {
-                    if (error) return res.status(500).json({
-                        status: 500,
-                        message: 'Something went wrong, please try again.',
-                        error: err
-                    });
-
-                    return res.status(200).json({
-                        status: 200,
-                        message: 'Success',
-                        data: foundComments
-                    });
-                });
+            return res.status(200).json({
+                status: 200,
+                message: 'Success'
             });
         });
     });
@@ -237,37 +211,10 @@ const unlikeReply = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
             });
-            
-            db.Comment.findById(foundReply.comment_id, (error, foundComment) => {
-                if (error) return res.status(500).json({
-                    status: 500,
-                    error,
-                    message: 'Something went wrong, please try again.'
-                });
 
-                foundComment.replies.forEach(reply => {
-
-                    if (reply._id.toString() === replyId) {
-                        let replyLikes = reply.likes.filter(like => like.toString() !== userId);
-                        reply.likes = replyLikes;
-                    };
-                });
-
-                foundComment.save();
-
-                db.Comment.find({ clip_id: foundComment.clip_id }, (error, foundComments) => {
-                    if (error) return res.status(500).json({
-                        status: 500,
-                        message: 'Something went wrong, please try again.',
-                        error: err
-                    });
-
-                    return res.status(200).json({
-                        status: 200,
-                        message: 'Success',
-                        data: foundComments
-                    });
-                });
+            return res.status(200).json({
+                status: 200,
+                message: 'Success'
             });
         });
     });

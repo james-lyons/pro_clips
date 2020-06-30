@@ -24,7 +24,11 @@ const commentSchema = new Schema({
         type: String,
         required: true
     },
-    replies: [ Reply.schema ],
+    replies: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Reply',
+        required: true
+    }],
     likes: [{
         type: Schema.Types.ObjectId,
         ref: 'User',

@@ -17,7 +17,7 @@ const indexComments = (req, res) => {
             message: 'Success',
             data: foundComments
         });
-    });
+    }).populate('replies');
 };
 
 const createComment = (req, res) => {
@@ -147,29 +147,30 @@ const likeComment = (req, res) => {
                 message: 'Something went wrong, please try again.'
             });
         });
+    });
 
-        db.Comment.findById(commentId, (error, foundComment) => {
+    db.Comment.findById(commentId, (error, foundComment) => {
+        if (error) return res.status(500).json({
+            status: 500,
+            error,
+            message: 'Something went wrong, please try again.'
+        });
+
+        clipdId = foundComment.clip_id;
+        foundComment.likes.push(userId);
+
+        foundComment.save((error) => {
             if (error) return res.status(500).json({
                 status: 500,
                 error,
                 message: 'Something went wrong, please try again.'
             });
-    
-            foundComment.likes.push(userId);
-
-            foundComment.save((error) => {
-                if (error) return res.status(500).json({
-                    status: 500,
-                    error,
-                    message: 'Something went wrong, please try again.'
-                });
-            });
         });
-    });
 
-    return res.status(200).json({
-        status: 200,
-        message: 'Success'
+        return res.status(200).json({
+            status: 200,
+            message: 'Success'
+        });
     });
 };
 
@@ -212,12 +213,12 @@ const unlikeComment = (req, res) => {
                     message: 'Something went wrong, please try again.'
                 });
             });
-        });
-    });
 
-    return res.status(200).json({
-        status: 200,
-        message: 'Success'
+            return res.status(200).json({
+                status: 200,
+                message: 'Success'
+            });
+        });
     });
 };
 
