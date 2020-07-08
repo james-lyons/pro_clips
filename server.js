@@ -20,8 +20,16 @@ const getSecret = async () => {
         WithDecryption: false
     };
 
-    let result = await ssm.getParameter(params).promise();
-    console.log('Hello from getSecret 1: result', result)
+    let result = await ssm.getParameter(params)
+        .then((error, data) => {
+            if (error) {
+                console.log('Hello from getSecret: error', error);
+                return error;
+            } else {
+                console.log('Hello from getSecret: result', data);
+                return data;
+            }
+        });
 
     return result.Parameter.Value;
 };
