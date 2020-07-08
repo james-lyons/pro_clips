@@ -3,8 +3,14 @@
 const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const AWS = require('aws-sdk');
 const cors = require('cors');
 require('dotenv').config();
+
+const sessionSecret = AWS.StringParameter.valueForStringParameter(
+    this, 'session-secret');  
+    
+    console.log(sessionSecret);
 
 // ------------------------------- Instanced Modules ------------------------------- //
 
