@@ -4,9 +4,10 @@ const MONGO_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/pro-clip
 // Connecting to MongoDB database
 
 mongoose.connect(MONGO_URL, {
+    useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
-    useCreateIndex: true
+    useUnifiedTopology: true,
 })
     .then(() => console.log('mongoDB has successfully connected...'))
     .catch((err) => console.log(err));
