@@ -13,28 +13,32 @@ const app = express();
 
 const ssm = new AWS.SSM({ region:'us-west-1' });
 
-let secretSession;
+const getSecret = async () => {
 
-const params = {
-    Name: 'session-secret',
-    WithDecryption: false
+    const params = {
+        Name: 'session-secret',
+        WithDecryption: false
+    };
+
+    let result = await ssm.getParameter(params).promise();
+    console.log('Hello from getSecret 1: result', result)
+
+    return result.Parameter.Value;
 };
 
-const getParams = async () => {
-    let res = await ssm.getParameter(params)
-        .promise()
-        .then((error, data) => {
-            if (error) return console.log('Hello from getParam 1: error', error);
-            secretSession = data;
-    
-            return console.log('Hello from getParam 2: data', data);
-        });
-};
+let secretSession = getSecret();
 
-getParams();
+console.log('Hello from getSecret 2: secretSession', secretSession)
 
-console.log('Hello from getParam 3: secretSession', secretSession)
 
+
+// .then((error, data) => {
+//     if (error) return console.log('Hello from getSecret 1: error', error);
+//     secretSession = data;
+
+//     console.log('Hello from getSecret 2: data', data)
+//     return ;
+// });
 
 // const getParams = async () => {
 //     const params = { Name: 'session-secret', WithDecryption: false };
