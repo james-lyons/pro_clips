@@ -20,13 +20,16 @@ const params = {
     WithDecryption: false
 };
 
-let res = ssm.getParameter(params)
-    .promise()
-    .then((error, data) => {
-        if (error) return console.log('Hello from getParam 1: error', error);
-        secretSession = data;
-        return console.log('Hello from getParam 2: data', data);
-    });
+const getParams = async () => {
+    let res = await ssm.getParameter(params)
+        .promise()
+        .then((error, data) => {
+            if (error) return console.log('Hello from getParam 1: error', error);
+            secretSession = data;
+    
+            return console.log('Hello from getParam 2: data', data);
+        });
+};
 
 console.log('Hello from getParam 3: secretSession', secretSession)
 
@@ -43,8 +46,6 @@ console.log('Hello from getParam 3: secretSession', secretSession)
 // };
 
 // getParams();
-
-console.log('Hello from secreSession 3: secretSesstion', secretSession);
 
 // ------------------------- State Configuration Variables ------------------------- //
 
