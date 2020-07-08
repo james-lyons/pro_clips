@@ -4,7 +4,6 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const routes = require('./routes');
 require('dotenv').config();
 
 // ------------------------------- Instanced Modules ------------------------------- //
@@ -13,6 +12,7 @@ const app = express();
 
 // ------------------------- State Configuration Variables ------------------------- //
 
+const routes = require('./routes');
 const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
@@ -26,7 +26,7 @@ app.use(session({
 }));
 
 const corsOptions = {
-    origin: 'http://localhost:8080',
+    origin: 'https://master.d1ypoilx07vzpv.amplifyapp.com',
     methods: ['GET', 'PUT', 'POST', 'HEAD', 'DELETE', 'OPTIONS'],
     headers: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
     credentials: true,
@@ -34,7 +34,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('http://localhost:8080', cors());
+app.options('https://master.d1ypoilx07vzpv.amplifyapp.com', cors());
 
 // ------------------------------------- Routes ------------------------------------ //
 

@@ -1,9 +1,9 @@
 module.exports = {
-    auth: require('./Auth'),
-    accounts: require('./Accounts'),
-    clips: require('./Clips'),
-    follow: require('./Follow'),
-    reports: require('./Reports'),
-    replies: require('./Replies'),
-    comments: require('./Comments'),
+    auth: require('./auth'),
+    accounts: require('./accounts'),
+    clips: require('./clips'),
+    follow: require('./follow'),
+    reports: require('./reports'),
+    replies: require('./replies'),
+    comments: require('./comments'),
 };
