@@ -31,6 +31,8 @@ const getParams = async () => {
         });
 };
 
+getParams();
+
 console.log('Hello from getParam 3: secretSession', secretSession)
 
 
