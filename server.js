@@ -11,26 +11,29 @@ require('dotenv').config();
 
 const app = express();
 
-AWS.config.update({ region:'us-west-1' });
 const ssm = new AWS.SSM();
-
-const params = { Name: 'session-secret', WithDecryption: false };
 
 let secretSession;
 
-ssm.getParameter(params, (error, data) => {
-    if (error) console.log('Hello from secretSession 1: error', error);
-    
-    console.log('Hello from secretSession 2: data', data);
-    secretSession = data;
-    return;
-});
+const getParams = async () => {
+    const params = { Name: 'session-secret', WithDecryption: false };
+
+    let res = await ssm.getParameter(params, (error, data) => {
+        if (error) return console.log('Hello from getParams 1: error', error);
+
+        secretSession = data;
+        return console.log(secretSession);
+    });
+};
+
+getParams();
 
 console.log('Hello from secreSession 3: secretSesstion', secretSession);
 
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
+const { SNS } = require('aws-sdk');
 const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
