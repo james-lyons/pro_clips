@@ -16,10 +16,13 @@ const ssm = new AWS.SSM();
 
 const params = { Name: 'session-secret', WithDecryption: false };
 
-let secretSession = ssm.getParameter(params, (error, data) => {
+let secretSession;
+
+ssm.getParameter(params, (error, data) => {
     if (error) console.log('Hello from secretSession 1: error', error);
     
     console.log('Hello from secretSession 2: data', data);
+    secretSession = data;
     return;
 });
 
