@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const ctrls = require('../controllers');
-const authRequired = require('../middleware/authRequired');
 const upload = require('../middleware/multer');
+const authRequired = require('../middleware/authRequired');
 
 router.get('/clip/:id', ctrls.clips.showClip);
 router.get('/browseclips', ctrls.clips.indexBrowseClips);
