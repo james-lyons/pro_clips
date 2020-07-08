@@ -11,7 +11,7 @@ require('dotenv').config();
 
 const app = express();
 
-const ssm = new AWS.SSM();
+const ssm = new AWS.SSM({ region:'us-west-1' });
 
 let secretSession;
 
