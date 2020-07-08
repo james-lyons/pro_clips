@@ -20,7 +20,7 @@ const params = {
     WithDecryption: false
 };
 
-let res = await ssm.getParameter(params)
+let res = ssm.getParameter(params)
     .promise()
     .then((error, data) => {
         if (error) return console.log('Hello from getParam 1: error', error);
