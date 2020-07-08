@@ -21,6 +21,7 @@ const getSecret = async () => {
     };
 
     let result = await ssm.getParameter(params)
+        .promise()
         .then((error, data) => {
             if (error) {
                 console.log('Hello from getSecret: error', error);
