@@ -5,6 +5,23 @@ const db = require('../models');
 
 // ----------------------- Controllers ----------------------- //
 
+const searchUsers = (req, res) => {
+    db.User.find({ username: { $regex: req.params.search, '$options' : 'i' }}, (error, foundUsers) => {
+        if (error) return res.status(500).json({
+            status: 500,
+            error
+        });
+
+        let searchResults = [];
+        foundUsers.forEach(foundUser => searchResults.push({ title: foundUser.username, image: foundUser.profile_image }));
+
+        return res.status(200).json({
+            status: 200,
+            data: searchResults
+        });
+    });
+};
+
 const fetchCurrentUser = (req, res) => {
 
     db.User.findById(req.session.currentUser._id, (error, foundUser) => {
@@ -337,6 +354,7 @@ const deleteUser = (req, res) => {
 };
 
 module.exports = {
+    searchUsers,
     fetchUser,
     fetchCurrentUser,
     editUserProfile,

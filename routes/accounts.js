@@ -4,6 +4,7 @@ const ctrls = require('../controllers');
 const authRequired = require('../middleware/authRequired');
 
 router.get('/user/:username', ctrls.accounts.fetchUser);
+router.get('/users/:search', ctrls.accounts.searchUsers);
 router.get('/currentuser/:id', authRequired, ctrls.accounts.fetchCurrentUser);
 router.put('/:id/profile', authRequired, ctrls.accounts.editUserProfile);
 router.put('/:id/password', authRequired, ctrls.accounts.editUserPassword);
