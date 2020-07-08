@@ -20,19 +20,16 @@ const getSecret = async () => {
         WithDecryption: false
     };
 
-    let result = await ssm.getParameter(params)
-        .promise()
-        .then((error, data) => {
-            if (error) {
-                console.log('Hello from getSecret: error', error);
-                return error;
-            } else {
-                console.log('Hello from getSecret: result', data);
-                return data;
-            }
-        });
+    try {
+        let result = await ssm.getParameter(params);
+        console.log('Hello from getSecret: Result', result);
 
-    return result.Parameter.Value;
+        return result;
+
+    } catch (error) {
+        console.log('Hello from getSecret: Error', error)
+        return error;
+    };
 };
 
 let secretSession = getSecret();
@@ -40,32 +37,9 @@ let secretSession = getSecret();
 console.log('Hello from getSecret 2: secretSession', secretSession)
 
 
-
-// .then((error, data) => {
-//     if (error) return console.log('Hello from getSecret 1: error', error);
-//     secretSession = data;
-
-//     console.log('Hello from getSecret 2: data', data)
-//     return ;
-// });
-
-// const getParams = async () => {
-//     const params = { Name: 'session-secret', WithDecryption: false };
-
-//     let res = await ssm.getParameter(params, (error, data) => {
-//         if (error) return console.log('Hello from getParams 1: error', error);
-
-//         secretSession = data;
-//         return console.log(secretSession);
-//     });
-// };
-
-// getParams();
-
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
-const { SNS } = require('aws-sdk');
 const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
