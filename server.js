@@ -7,14 +7,23 @@ const AWS = require('aws-sdk');
 const cors = require('cors');
 require('dotenv').config();
 
-const sessionSecret = AWS.StringParameter.valueForStringParameter(
-    this, 'session-secret');  
-    
-    console.log(sessionSecret);
-
 // ------------------------------- Instanced Modules ------------------------------- //
 
 const app = express();
+
+AWS.config.update({ region:'us-west-1' });
+const ssm = new AWS.SSM();
+
+const params = { Name: 'session-secret', WithDecryption: false };
+
+let secretSession = ssm.getParameter(params, (error, data) => {
+    if (error) console.log(error);
+    
+    console.log(data);
+    return;
+});
+
+console.log(secretSession);
 
 // ------------------------- State Configuration Variables ------------------------- //
 
