@@ -34,7 +34,7 @@ const app = express();
 // let secretSession = getSecret();
 
 
-let credentials = new AWS.SharedIniFileCredentials({ profile: 'default' });
+let credentials = new AWS.SharedIniFileCredentials({ profile: 'pro-clips' });
 AWS.config.credentials = credentials;
 
 console.log('Hello from server 1', AWS.config.credentials);
