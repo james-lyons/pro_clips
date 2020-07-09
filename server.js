@@ -11,38 +11,6 @@ require('dotenv').config();
 
 const app = express();
 
-// const ssm = new AWS.SSM({ region:'us-west-1a' });
-
-// const getSecret = async () => {
-
-//     const params = {
-//         Name: 'session-secret',
-//         WithDecryption: false
-//     };
-
-//     try {
-//         let result = await ssm.getParameter(params);
-//         console.log('Hello from getSecret: Result', result);
-
-//         return result.Parameter.Value;
-
-//     } catch (error) {
-//         console.log('Hello from getSecret: Error', error)
-//         return error;
-//     };
-// };
-// let secretSession = getSecret();
-
-
-// let credentials = new AWS.SharedIniFileCredentials({ profile: 'pro-clips' });
-// AWS.config.credentials = credentials;
-
-// console.log('Hello from server 1', AWS.config.credentials);
-// console.log('Hello from server 2', process.env.AWS_PROFILE);
-// console.log('Hello from server 3', process.env.SESSION_TOKEN);
-
-// console.log('Hello from getSecret 2: secretSession', secretSession)
-
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
@@ -59,7 +27,7 @@ app.use(session({
 }));
 
 const corsOptions = {
-    origin: 'https://master.d1ypoilx07vzpv.amplifyapp.com',
+    origin: 'https://proclips.io',
     methods: ['GET', 'PUT', 'POST', 'HEAD', 'DELETE', 'OPTIONS'],
     headers: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
     credentials: true,
@@ -67,7 +35,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('https://master.d1ypoilx07vzpv.amplifyapp.com', cors());
+app.options('https://proclips.io', cors());
 
 // ------------------------------------- Routes ------------------------------------ //
 
