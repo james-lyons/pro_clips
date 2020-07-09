@@ -11,31 +11,35 @@ require('dotenv').config();
 
 const app = express();
 
-const ssm = new AWS.SSM({ region:'us-west-1' });
+// const ssm = new AWS.SSM({ region:'us-west-1a' });
 
-const getSecret = async () => {
+// const getSecret = async () => {
 
-    const params = {
-        Name: 'session-secret',
-        WithDecryption: false
-    };
+//     const params = {
+//         Name: 'session-secret',
+//         WithDecryption: false
+//     };
 
-    try {
-        let result = await ssm.getParameter(params);
-        console.log('Hello from getSecret: Result', result);
+//     try {
+//         let result = await ssm.getParameter(params);
+//         console.log('Hello from getSecret: Result', result);
 
-        return result;
+//         return result.Parameter.Value;
 
-    } catch (error) {
-        console.log('Hello from getSecret: Error', error)
-        return error;
-    };
-};
+//     } catch (error) {
+//         console.log('Hello from getSecret: Error', error)
+//         return error;
+//     };
+// };
+// let secretSession = getSecret();
 
-let secretSession = getSecret();
 
-console.log('Hello from getSecret 2: secretSession', secretSession)
+let credentials = new AWS.SharedIniFileCredentials({ profile: 'pro-clips' });
+AWS.config.credentials = credentials;
 
+console.log('Hello from server 1', AWS.config.credentials);
+
+// console.log('Hello from getSecret 2: secretSession', secretSession)
 
 // ------------------------- State Configuration Variables ------------------------- //
 
