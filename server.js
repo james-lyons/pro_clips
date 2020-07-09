@@ -39,6 +39,7 @@ AWS.config.credentials = credentials;
 
 console.log('Hello from server 1', AWS.config.credentials);
 console.log('Hello from server 2', process.env.AWS_PROFILE);
+console.log('Hello from server 3', process.env.SESSION_TOKEN);
 
 // console.log('Hello from getSecret 2: secretSession', secretSession)
 
