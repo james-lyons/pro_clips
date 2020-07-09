@@ -34,12 +34,12 @@ const app = express();
 // let secretSession = getSecret();
 
 
-let credentials = new AWS.SharedIniFileCredentials({ profile: 'pro-clips' });
-AWS.config.credentials = credentials;
+// let credentials = new AWS.SharedIniFileCredentials({ profile: 'pro-clips' });
+// AWS.config.credentials = credentials;
 
-console.log('Hello from server 1', AWS.config.credentials);
-console.log('Hello from server 2', process.env.AWS_PROFILE);
-console.log('Hello from server 3', process.env.SESSION_TOKEN);
+// console.log('Hello from server 1', AWS.config.credentials);
+// console.log('Hello from server 2', process.env.AWS_PROFILE);
+// console.log('Hello from server 3', process.env.SESSION_TOKEN);
 
 // console.log('Hello from getSecret 2: secretSession', secretSession)
 
@@ -53,7 +53,7 @@ const PORT = process.env.PORT || 4000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
-    secret: process.env.SECRET,
+    secret: process.env.SESSION_TOKEN,
     resave: false,
     saveUninitialized: false
 }));
