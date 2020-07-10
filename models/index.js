@@ -33,10 +33,32 @@ const getMongodbUrl = async () => {
 
         return data.Parameter.value;
     });
-    return;
+    return data.Parameter.value;
 };
 
 const MONGODB_URL = getMongodbUrl();
+
+const getMongodbString = async () => {
+    try {
+        let connectionString = await ssm.getParameter(options, (error, data) => {
+            if (error) {
+                console.log(error, errorStack);
+                return;
+            };
+
+            console.log('Hello from getMongodbString: data', data);
+            return;
+        });
+
+        console.log('Hello from connectionString', connectionString);
+        return connectionString.Parameter.value;
+
+    } catch (error) {
+        console.log(error);
+    };
+};
+
+const MONGODB_CONNECTION_STRING = getMongodbString();
 
 ssm.getParameter(options, (error, data) => {
     if (error) {
@@ -51,6 +73,7 @@ ssm.getParameter(options, (error, data) => {
 console.log('Hello MONGODB_URI!!!', MONGODB_URI);
 console.log('Hello MONGODB_URL!!!', MONGODB_URL);
 console.log('Hello MONGODB_STRING!!!', MONGODB_STRING);
+console.log('Hello MONGODB_CONNECTION_STRING!!!', MONGODB_CONNECTION_STRING);
 
 
 const MONGODB_connection = MONGODB_URI || MONGODB_URL || 'mongodb://localhost:27017/pro-clips'
