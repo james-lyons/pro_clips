@@ -1,42 +1,49 @@
 const mongoose = require('mongoose');
 const AWS = require('aws-sdk');
-// const MONGO_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/pro-clips';
 
 const ssm = new AWS.SSM({ region: 'us-west-1' });
-const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDecryption: true }
+const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDecryption: true };
 
-const mongodbPromise = ssm.getParameter(mongoDBUriOptions).promise();
+let MONGODB_URI;
 
-const MONGODB_URI = await mongodbPromise.then((error, data) => {
-    if (error) {
-        console.log(error, errorStack);
-        return null;
-    }
+const getMongodbUri = async () => {
+    await ssm.getParameter(mongoDBUriOptions, (error, data) => {
+        if (error) {
+            console.log(error, errorStack);
+            return;
+        };
 
-    console.log('Hello from getMONGODB_URL', data);
+        console.log('Hello!!! DATA:', data);
 
-    return data.Parameter.value;
-});
+        return MONGODB_URI = data.Parameter.value;
+    });
+};
 
-console.log('Hello from getMongodbUri', MONGODB_URI)
+getMongodbUri();
+
+const getMongodbUrl = async () => {
+    await ssm.getParameter(mongoDBUriOptions, (error, data) => {
+        if (error) {
+            console.log(error, errorStack);
+            return;
+        };
+
+        console.log('Hello!!! DATA:', data);
+
+        return data.Parameter.value;
+    });
+};
+
+const MONGODB_URL = getMongodbUrl();
+
+console.log('Hello MONGODB_URI!!!', MONGODB_URI);
+console.log('Hello MONGODB_URL!!!', MONGODB_URL);
 
 
-// const MONGODB_URL = ssm.getParameter(mongoDBUriOptions, (error, data) => {
-//     if (error) {
-//         console.log(error, errorStack);
-//         return null;
-//     }
+const MONGODB_connection = MONGODB_URI || MONGODB_URL || 'mongodb://localhost:27017/pro-clips'
 
-//     console.log('Hello from getMONGODB_URL', data);
 
-//     return data.Parameter.value;
-// });
-
-// console.log('Hello from mongoDBURI', MONGODB_URL)
-
-// Connecting to MongoDB database
-
-mongoose.connect(MONGODB_URI, {
+mongoose.connect(MONGODB_connection, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
