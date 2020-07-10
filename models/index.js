@@ -4,12 +4,14 @@ const AWS = require('aws-sdk');
 
 const ssm = new AWS.SSM({ region: 'us-west-1' });
 const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDecryption: true }
-let MONGODB_URL;
 
-ssm.getParameter(mongoDBUriOptions, (error, data) => {
-    if (error) return console.log(error, errorStack);
+const MONGODB_URL = ssm.getParameter(mongoDBUriOptions, (error, data) => {
+    if (error) {
+        console.log(error, errorStack);
+        return;
+    }
 
-    return MONGODB_URL = data.Parameter.value;
+    return data.Parameter.value;
 });
 
 console.log('Hello from mongoDBURI', MONGODB_URL)
