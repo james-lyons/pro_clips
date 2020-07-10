@@ -8,13 +8,15 @@ const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDec
 const MONGODB_URL = ssm.getParameter(mongoDBUriOptions, (error, data) => {
     if (error) {
         console.log(error, errorStack);
-        return;
+        return null;
     }
+
+    console.log('Hello from getMONGODB_URL', data);
 
     return data.Parameter.value;
 });
 
-console.log('Hello from mongoDBURI', MONGODB_URL)
+// console.log('Hello from mongoDBURI', MONGODB_URL)
 
 // Connecting to MongoDB database
 

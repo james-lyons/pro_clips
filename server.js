@@ -24,8 +24,10 @@ const sessionSecretOptions = { Name: '/proclips/session-secret', WithDecryption:
 const sessionSecret = ssm.getParameter(sessionSecretOptions, (error, data) => {
     if (error) {
         console.log(error, errorStack);
-        return;
+        return null;
     };
+
+    console.log('Hello from getSessionSecret', data);
 
     return data.Parameter.value;
 });
