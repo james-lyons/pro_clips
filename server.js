@@ -14,13 +14,13 @@ const app = express();
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 // ----------------------------------- Middleware ---------------------------------- //
 
 const ssm = new AWS.SSM({ region: 'us-west-1' });
 
-const sessionSecretOptions = { Name: '/proclips/session-secret', WithDecryption: true },
+const sessionSecretOptions = { Name: '/proclips/session-secret', WithDecryption: true };
 const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDecryption: true }
 
 let sessionSecret1;
