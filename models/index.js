@@ -1,11 +1,22 @@
 const mongoose = require('mongoose');
-const MONGO_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/pro-clips';
+const AWS = require('aws-sdk');
+// const MONGO_URL = process.env.MONGODB_URI || 'mongodb://localhost:27017/pro-clips';
 
-console.log('Hello from MONGO_URI', process.env.MONGODB_URI)
+const ssm = new AWS.SSM({ region: 'us-west-1' });
+const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDecryption: true }
+let MONGODB_URL;
+
+ssm.getParameter(mongoDBUriOptions, (error, data) => {
+    if (error) return console.log(error, errorStack);
+
+    return MONGODB_URL = data.Parameter.value;
+});
+
+console.log('Hello from mongoDBURI', MONGODB_URL)
 
 // Connecting to MongoDB database
 
-mongoose.connect(MONGO_URL, {
+mongoose.connect(MONGODB_URL, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,

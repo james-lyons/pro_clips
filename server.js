@@ -19,55 +19,18 @@ const PORT = process.env.PORT || 5000;
 // ----------------------------------- Middleware ---------------------------------- //
 
 const ssm = new AWS.SSM({ region: 'us-west-1' });
-
 const sessionSecretOptions = { Name: '/proclips/session-secret', WithDecryption: true };
-const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDecryption: true }
 
-let sessionSecret1;
-let sessionSecret2;
-let mongoDBURI1;
-let mongoDBURI2;
+const sessionSecret = ssm.getParameter(sessionSecretOptions, (error, data) => {
+    if (error) {
+        console.log(error, errorStack);
+        return;
+    };
 
-ssm.getParameter(sessionSecretOptions)
-    .promise()
-    .then((error, data) => {
-        if (error) return console.log(error, errorStack);
-
-        console.log('Hello from getParam: sessionSecret 1', data);
-
-        return sessionSecret1 = data;
-    });
-
-ssm.getParameter(mongoDBUriOptions)
-    .promise()
-    .then((error, data) => {
-        if (error) return console.log(error, errorStack);
-
-        console.log('Hello from getParam: MongoDBURI 1', data);
-
-        return mongoDBURI1 = data;
-    });
-
-ssm.getParameter(sessionSecretOptions, (error, data) => {
-    if (error) return console.log(error, errorStack);
-
-    console.log('Hello from getParam: sessionSecret 2', data);
-
-    return sessionSecret2 = data;
+    return data.Parameter.value;
 });
 
-ssm.getParameter(mongoDBUriOptions, (error, data) => {
-    if (error) return console.log(error, errorStack);
-
-    console.log('Hello from getParam: MongoDBURI 2', data);
-
-    return mongoDBURI2 = data;
-});
-
-console.log('Hello!!!', sessionSecret1);
-console.log('Hello!!!', sessionSecret2);
-console.log('Hello!!!', mongoDBURI1);
-console.log('Hello!!!', mongoDBURI2);
+console.log('Hello!!!', sessionSecret);
 
 
 // ----------------------------------------------------------- //
@@ -76,7 +39,7 @@ console.log('Hello!!!', mongoDBURI2);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
-    secret: process.env.SESSION_TOKEN,
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false
 }));
