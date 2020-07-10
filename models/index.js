@@ -7,7 +7,7 @@ const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDec
 
 const mongodbPromise = ssm.getParameter(mongoDBUriOptions).promise();
 
-const MONGODB_URI = mongodbPromise.then((error, data) => {
+const MONGODB_URI = await mongodbPromise.then((error, data) => {
     if (error) {
         console.log(error, errorStack);
         return null;
