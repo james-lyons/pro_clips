@@ -5,7 +5,9 @@ const AWS = require('aws-sdk');
 const ssm = new AWS.SSM({ region: 'us-west-1' });
 const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDecryption: true }
 
-const MONGODB_URL = ssm.getParameter(mongoDBUriOptions, (error, data) => {
+const mongodbPromise = ssm.getParameter(mongoDBUriOptions).promise();
+
+const MONGODB_URI = mongodbPromise.then((error, data) => {
     if (error) {
         console.log(error, errorStack);
         return null;
@@ -16,11 +18,25 @@ const MONGODB_URL = ssm.getParameter(mongoDBUriOptions, (error, data) => {
     return data.Parameter.value;
 });
 
+console.log('Hello from getMongodbUri', MONGODB_URI)
+
+
+// const MONGODB_URL = ssm.getParameter(mongoDBUriOptions, (error, data) => {
+//     if (error) {
+//         console.log(error, errorStack);
+//         return null;
+//     }
+
+//     console.log('Hello from getMONGODB_URL', data);
+
+//     return data.Parameter.value;
+// });
+
 // console.log('Hello from mongoDBURI', MONGODB_URL)
 
 // Connecting to MongoDB database
 
-mongoose.connect(MONGODB_URL, {
+mongoose.connect(MONGODB_URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
