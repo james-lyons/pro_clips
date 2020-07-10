@@ -50,8 +50,8 @@ const fetchUser = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
-        if (!foundUser) return res.status(400).json({
-            status: 400,
+        if (!foundUser) return res.status(404).json({
+            status: 404,
             error: { message: 'No user by that name.' },
             message: 'Please try again.'
         });
