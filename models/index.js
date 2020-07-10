@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 const AWS = require('aws-sdk');
 
 const ssm = new AWS.SSM({ region: 'us-west-1' });
-const mongoDBUriOptions = { Name: '/proclips/mongodb-connection-string', WithDecryption: true };
+const options = { Name: '/proclips/mongodb-connection-string', WithDecryption: true };
 
 let MONGODB_URI;
+let MONGODB_STRING;
 
 const getMongodbUri = async () => {
-    await ssm.getParameter(mongoDBUriOptions, (error, data) => {
+    await ssm.getParameter(options, (error, data) => {
         if (error) {
             console.log(error, errorStack);
             return;
@@ -22,7 +23,7 @@ const getMongodbUri = async () => {
 getMongodbUri();
 
 const getMongodbUrl = async () => {
-    await ssm.getParameter(mongoDBUriOptions, (error, data) => {
+    await ssm.getParameter(options, (error, data) => {
         if (error) {
             console.log(error, errorStack);
             return;
@@ -32,12 +33,24 @@ const getMongodbUrl = async () => {
 
         return data.Parameter.value;
     });
+    return;
 };
 
 const MONGODB_URL = getMongodbUrl();
 
+ssm.getParameter(options, (error, data) => {
+    if (error) {
+        console.log(error, errorStack);
+        return;
+    };
+
+    console.log('Hello!!! Data', data);
+    return MONGODB_STRING = data.Parameter.value;
+});
+
 console.log('Hello MONGODB_URI!!!', MONGODB_URI);
 console.log('Hello MONGODB_URL!!!', MONGODB_URL);
+console.log('Hello MONGODB_STRING!!!', MONGODB_STRING);
 
 
 const MONGODB_connection = MONGODB_URI || MONGODB_URL || 'mongodb://localhost:27017/pro-clips'
