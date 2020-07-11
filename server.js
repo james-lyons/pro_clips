@@ -7,8 +7,6 @@ const AWS = require('aws-sdk');
 const cors = require('cors');
 require('dotenv').config();
 
-console.log('Hello from server1: process.env', process.env);
-
 // ------------------------------- Instanced Modules ------------------------------- //
 
 const app = express();
@@ -16,7 +14,7 @@ const app = express();
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 // ----------------------------------- Middleware ---------------------------------- //
 
