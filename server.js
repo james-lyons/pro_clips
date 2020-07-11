@@ -14,40 +14,21 @@ const app = express();
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
 
-const ssm = new AWS.SSM({ region: 'us-west-1' });
-const sessionSecretOptions = { Name: '/proclips/session-secret', WithDecryption: true };
-
-const sessionSecret = ssm.getParameter(sessionSecretOptions, (error, data) => {
-    if (error) {
-        console.log(error, errorStack);
-        return null;
-    };
-
-    console.log('Hello from getSessionSecret', data);
-
-    return data.Parameter.value;
-});
-
-console.log('Hello!!!', sessionSecret);
-
-
-// ----------------------------------------------------------- //
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(session({
-    secret: sessionSecret,
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));
 
 const corsOptions = {
-    origin: 'https://www.proclips.io',
+    origin: 'https://proclips.io',
     methods: ['GET', 'PUT', 'POST', 'HEAD', 'DELETE', 'OPTIONS'],
     headers: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
     credentials: true,
@@ -55,7 +36,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('https://www.proclips.io', cors());
+app.options('https://proclips.io', cors());
 
 // ------------------------------------- Routes ------------------------------------ //
 
@@ -70,7 +51,6 @@ app.use('/comments', routes.comments);
 app.use('/replies', routes.replies);
 app.use('/clips', routes.clips);
 app.use('/report', routes.reports);
-
 
 // --------------------------------- Server Listener ------------------------------ //
 
