@@ -142,7 +142,8 @@ const showClip = (req, res) => {
 
 const uploadClip = (req, res) => {
 
-    console.log(req.body);
+    console.log('Req.body', req.body);
+    console.log('process.env', process.env);
     
     db.User.findById(req.session.currentUser, (error, foundUser) => {
         if (error) return res.status(404).json({
@@ -159,9 +160,9 @@ const uploadClip = (req, res) => {
         let newUrl = "https://s3-us-west-1.amazonaws.com/pro.clips/" + newKey;
 
         let s3bucket = new aws.S3({
+            region: process.env.AWS_REGION,
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-            region: process.env.AWS_REGION
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
         });
 
         let params = {
@@ -170,16 +171,6 @@ const uploadClip = (req, res) => {
             Body: file.buffer,
             ACL: "public-read"
         };
-
-        console.log(params);
-
-        s3bucket.upload(params, (error, data) => {
-            if (error) return res.status(500).json({ 
-                status: 500,
-                error,
-                message: 'Something went wrong, please try again.'
-            });
-        });
 
         let newClip = {
             game: game,
@@ -190,6 +181,18 @@ const uploadClip = (req, res) => {
             poster_name: username,
         };
 
+        console.log('params', params);
+        console.log('s3 bucket:', s3bucket);
+        console.log('newclip', newClip);
+
+        s3bucket.upload(params, (error, data) => {
+            if (error) return res.status(500).json({ 
+                status: 500,
+                error,
+                message: 'Something went wrong, please try again.'
+            });
+        });
+
         db.Clip.create(newClip, (error, createdClip) => {
             if (error) return res.status(500).json({
                 status: 500,
@@ -199,11 +202,11 @@ const uploadClip = (req, res) => {
 
             foundUser.clips.push(createdClip._id);
             foundUser.save();
-        });
 
-        return res.status(200).json({
-            status: 200,
-            message: 'Successfully added clip to user.',
+            return res.status(200).json({
+                status: 200,
+                message: 'Successfully added clip to user.',
+            });
         });
     });
 };
