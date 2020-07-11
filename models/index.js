@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const MONGODB_URI = process.env.MONGODB_URL || 'mongodb://localhost:27017/pro-clips'
 
+console.log('hello from mongodb', MONGODB_URI);
+
 mongoose.connect(MONGODB_URI, {
     useCreateIndex: true,
     useNewUrlParser: true,
