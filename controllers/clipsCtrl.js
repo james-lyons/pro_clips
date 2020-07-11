@@ -141,6 +141,8 @@ const showClip = (req, res) => {
 };
 
 const uploadClip = (req, res) => {
+
+    console.log(req.body);
     
     db.User.findById(req.session.currentUser, (error, foundUser) => {
         if (error) return res.status(404).json({
@@ -187,6 +189,8 @@ const uploadClip = (req, res) => {
             Body: file.buffer,
             ACL: "public-read"
         };
+
+        console.log(params);
 
         s3bucket.upload(params, (error, data) => {
             if (error) return res.status(500).json({ 
