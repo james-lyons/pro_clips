@@ -146,31 +146,12 @@ const uploadClip = (req, res) => {
     
     db.User.findById(req.session.currentUser, (error, foundUser) => {
         if (error) return res.status(404).json({
-            status: 500,
+            status: 404,
             message: 'Something went wrong, please try again.'
         });
 
         const { file } = req;
         const { game, title } = req.body;
-
-        if (!file) {
-            return res.status(400).json({
-                status: 400,
-                error: { message: 'Please select a file' }
-            });
-
-        } else if (!game) {
-            return res.status(400).json({
-                status: 400,
-                error: { message: 'Please select a game name' }
-            });
-
-        } else if (!title) {
-            return res.status(400).json({
-                status: 400,
-                error: { message: 'Please include a title' }
-            });
-        };
 
         let username = req.session.currentUser.username;
         let currentDate = Date.now();
