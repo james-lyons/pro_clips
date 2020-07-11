@@ -14,7 +14,7 @@ const app = express();
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
 
@@ -28,7 +28,7 @@ app.use(session({
 }));
 
 const corsOptions = {
-    origin: 'https://proclips.io',
+    origin: 'https://proclips.io/',
     methods: ['GET', 'PUT', 'POST', 'HEAD', 'DELETE', 'OPTIONS'],
     headers: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
     credentials: true,
@@ -36,7 +36,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.options('https://proclips.io', cors());
+app.options('https://proclips.io/', cors());
 
 // ------------------------------------- Routes ------------------------------------ //
 
