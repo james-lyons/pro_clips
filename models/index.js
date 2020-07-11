@@ -7,7 +7,7 @@ mongoose.connect(MONGODB_URI, {
     useFindAndModify: false,
     useUnifiedTopology: true
 })
-    .then(() => console.log('mongoDB has successfully connected...'))
+    .then(() => console.log('mongoDB has successfully connected on: ', MONGODB_URI))
     .catch((err) => console.log(err));
 
 module.exports = {
