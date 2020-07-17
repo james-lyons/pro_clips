@@ -49,7 +49,9 @@ const nodemailer = require("nodemailer");
 
 // Nodemailer
 
-const sendMail = async (email, user) => {
+const sendMail = async (user) => {
+
+    console.log(user.email)
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
@@ -74,7 +76,7 @@ const sendMail = async (email, user) => {
           
             transporter.sendMail({
                 from: `"ProClips 🎥" <${ process.env.PROCLIPS_EMAIL }>`,
-                to: email,
+                to: user.email,
                 subject: "ProClips email verification",
                 html: `<p>Hi! Thanks for signing up. Please click the link below to confirm your email.</p><a href="${ url }">Click here to confirm</a>`
             });

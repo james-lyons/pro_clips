@@ -62,7 +62,8 @@ const userSchema = new Schema({
     }],
     isConfirmed: {
         type: Boolean,
-        default: false
+        default: false,
+        required: true
     }
 });
 

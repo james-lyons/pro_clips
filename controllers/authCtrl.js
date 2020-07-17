@@ -93,7 +93,9 @@ const register = (req, res) => {
                             message: 'Something went wrong, please try again.'
                         });
 
-                        sendMail(req.body.email, createdUser).catch(console.error);
+                        console.log('Hello from registerUser', createdUser);
+
+                        sendMail(createdUser).catch(console.error);
     
                         res.status(201).json({
                             status: 201,
