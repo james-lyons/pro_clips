@@ -1,10 +1,32 @@
 // ------------------------- Modules ------------------------- //
 
-const bcrypt = require('bcryptjs');
 const db = require('../models');
+const AWS = require('aws-sdk');
+const bcrypt = require('bcryptjs');
+const JWT = require('jsonwebtoken');
 const validateUser = require('../validation/userRegisteration');
+const sendMail = require('../middleware/sendEmail');
 
 // ----------------------- Controllers ----------------------- //
+
+
+const confirmEmail = async (req, res) => {
+    try {
+        const { user } = JWT.verify(req.params.confirmToken, process.env.EMAIL_SECRET);
+
+        await db.User.findByIdAndUpdate(user._id, { isConfirmed: true }, (error, updatedUser) => {
+            if (error) return res.status(500).json({
+                status: 500,
+                error
+            });
+            return;
+        })
+    } catch (error) {
+        res.send(error);
+    };
+
+    return res.redirect('https://proclips.io/login');
+};
 
 const register = (req, res) => {
     const { errors, notValid } = validateUser(req.body);
@@ -64,12 +86,14 @@ const register = (req, res) => {
                         password2: hash
                     };
     
-                    db.User.create(newUser, (error, savedUser) => {
+                    db.User.create(newUser, (error, createdUser) => {
                         if (error) return res.status(500).json({
                             status: 500,
                             error,
                             message: 'Something went wrong, please try again.'
                         });
+
+                        sendMail(req.body.email, createdUser).catch(console.error);
     
                         res.status(201).json({
                             status: 201,
@@ -102,6 +126,12 @@ const login = (req, res) => {
         if (!foundUser) return res.status(400).json({
             status: 400,
             error: { message: 'Email or Password is incorrect' },
+            message: 'Please try again.'
+        });
+
+        if (!foundUser.isConfirmed) return res.status(400).json({
+            status: 400,
+            error: { message: 'Please check your inbox and confirm your email' },
             message: 'Please try again.'
         });
 
@@ -153,6 +183,7 @@ const logout = (req, res) => {
 };
 
 module.exports = {
+    confirmEmail,
     register,
     login,
     logout

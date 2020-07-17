@@ -141,6 +141,9 @@ const showClip = (req, res) => {
 };
 
 const uploadClip = (req, res) => {
+
+    console.log('Req.body', req.body);
+    console.log('process.env', process.env);
     
     db.User.findById(req.session.currentUser, (error, foundUser) => {
         if (error) return res.status(404).json({
@@ -177,6 +180,10 @@ const uploadClip = (req, res) => {
             poster: foundUser._id,
             poster_name: username,
         };
+
+        console.log('params', params);
+        console.log('s3 bucket:', s3bucket);
+        console.log('newclip', newClip);
 
         s3bucket.upload(params, (error, data) => {
             if (error) return res.status(500).json({ 

@@ -20,6 +20,10 @@ const userSchema = new Schema({
         default: 'Bio',
         required: false
     },
+    password: {
+        type: String,
+        required: true
+    },
     clips: [{
         type: Schema.Types.ObjectId
     }],
@@ -56,9 +60,9 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
-    password: {
-        type: String,
-        required: true
+    isConfirmed: {
+        type: Boolean,
+        default: false
     }
 });
 
