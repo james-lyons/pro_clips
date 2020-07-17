@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const MONGODB_URI = 'mongodb://localhost:27017/pro-clips'
+const MONGODB_URI = process.env.MONGODB_URL || 'mongodb://localhost:27017/pro-clips'
 
 mongoose.connect(MONGODB_URI, {
     useCreateIndex: true,
@@ -7,7 +7,7 @@ mongoose.connect(MONGODB_URI, {
     useFindAndModify: false,
     useUnifiedTopology: true
 })
-    .then()
+    .then(() => console.log('mongoDB has successfully connected on: ', MONGODB_URI))
     .catch((err) => console.log(err));
 
 module.exports = {
