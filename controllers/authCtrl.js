@@ -1,7 +1,6 @@
 // ------------------------- Modules ------------------------- //
 
 const db = require('../models');
-const AWS = require('aws-sdk');
 const bcrypt = require('bcryptjs');
 const JWT = require('jsonwebtoken');
 const validateUser = require('../validation/userRegisteration');
@@ -92,8 +91,6 @@ const register = (req, res) => {
                             error,
                             message: 'Something went wrong, please try again.'
                         });
-
-                        console.log('Hello from registerUser', createdUser);
 
                         sendMail(createdUser).catch(console.error);
     
