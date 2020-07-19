@@ -1,7 +1,9 @@
 // ------------------------- Modules ------------------------- //
 
-const bcrypt = require('bcryptjs');
 const db = require('../models');
+const bcrypt = require('bcryptjs');
+const JWT = require('jsonwebtoken');
+const { sendPasswordChangeEmail } = require('../middleware/sendEmail');
 
 // ----------------------- Controllers ----------------------- //
 
@@ -353,12 +355,99 @@ const deleteUser = (req, res) => {
     });
 };
 
+const recoverPassword = (req, res) => {
+    db.User.findOne({ email: req.body.email }, (error, foundUser) => {
+        if (error) return res.status(500).json({
+            status: 500,
+            error
+        });
+
+        if (!foundUser) {
+            return res.status(404).json({
+                status: 404,
+                error: { message: 'Account not found, please try to register again.' }
+            });
+        };
+
+        sendPasswordChangeEmail(foundUser).catch(console.error);
+
+        return res.status(201).json({
+            status: 201,
+        });
+    });
+};
+
+const resetPassword = (req, res) => {
+    const { userId, resetToken } = req.params;
+
+    db.User.findById(userId, (error, foundUser) => {
+        if (error) return res.status(500).json({
+            status: 500,
+            error
+        });
+
+        const tokenSecret = foundUser.password + '-' + foundUser.createdAt;
+
+        try {
+            const jwttoken = JWT.verify(resetToken, tokenSecret);
+    
+            if (jwttoken.userId = userId) {
+    
+                bcrypt.genSalt(10, (error, salt) => {
+                    if (error) return res.status(500).json({
+                        status: 500,
+                        error,
+                        message: 'Something went wrong, please try again.'
+                    });
+    
+                    bcrypt.hash(req.body.password, salt, (error, newHash) => {
+                        if (error) return res.status(500).json({
+                            status: 500,
+                            error,
+                            message: 'Something went wrong, please try again.'
+                        });
+    
+                        foundUser.password = newHash;    
+                        foundUser.save((error) => {
+                            if (error) return res.status(500).json({
+                                status: 500,
+                                error,
+                                message: 'Something went wrong, please try again.'
+                            });
+    
+                            return res.status(200).json({
+                                status: 200,
+                                message: 'Successfully updated password.'
+                            });
+                        });
+                    });
+                });
+    
+            } else {
+                return res.status(401).json({
+                    status: 401,
+                    error: { message: 'Unauthorized' }
+                });
+            };
+        } catch (error) {
+            return res.status(401).json({
+                status: 401,
+                error: { message: 'Unauthorized. If you requested a password reset, your link may have expired or may have been used already' }
+            });
+        };
+    });
+
+    return;
+};
+
 module.exports = {
-    searchUsers,
     fetchUser,
+    searchUsers,
     fetchCurrentUser,
     editUserProfile,
+    deleteUser,
     editUserEmail,
     editUserPassword,
-    deleteUser
+    recoverPassword,
+    resetPassword,
 };

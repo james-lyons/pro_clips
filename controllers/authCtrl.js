@@ -4,27 +4,52 @@ const db = require('../models');
 const bcrypt = require('bcryptjs');
 const JWT = require('jsonwebtoken');
 const validateUser = require('../validation/userRegisteration');
-const sendMail = require('../middleware/sendEmail');
+const { sendEmailVerification } = require('../middleware/sendEmail');
 
 // ----------------------- Controllers ----------------------- //
 
-
 const confirmEmail = async (req, res) => {
     try {
-        const { user } = JWT.verify(req.params.confirmToken, process.env.EMAIL_SECRET);
+        const { userId } = JWT.verify(req.params.confirmToken, process.env.EMAIL_SECRET);
 
-        await db.User.findByIdAndUpdate(user._id, { isConfirmed: true }, (error, updatedUser) => {
+        await db.User.findByIdAndUpdate(userId, { isConfirmed: true }, (error, updatedUser) => {
             if (error) return res.status(500).json({
                 status: 500,
                 error
             });
-            return;
-        })
-    } catch (error) {
-        res.send(error);
-    };
 
-    return res.redirect('https://proclips.io/login');
+            return res.status(201).json({
+                status: 201,
+                message: 'Success'
+            });
+        });
+
+    } catch (error) {
+        return res.send(error);
+    };
+    return;
+};
+
+const resendConfirmation = (req, res) => {
+    db.User.findOne({ email: req.params.email }, (error, foundUser) => {
+        if (error) return res.status(500).json({
+            status: 500,
+            error
+        });
+
+        if (!foundUser) {
+            return res.status(404).json({
+                status: 404,
+                error: { message: 'Account not found, please try to register again.' }
+            });
+        };
+
+        sendEmailVerification(foundUser).catch(console.error);
+
+        return res.status(201).json({
+            status: 201,
+        });
+    });
 };
 
 const register = (req, res) => {
@@ -92,9 +117,9 @@ const register = (req, res) => {
                             message: 'Something went wrong, please try again.'
                         });
 
-                        sendMail(createdUser).catch(console.error);
+                        sendEmailVerification(createdUser).catch(console.error);
     
-                        res.status(201).json({
+                        return res.status(201).json({
                             status: 201,
                             message: 'Thanks for signing up!',
                             data: newUser
@@ -182,8 +207,9 @@ const logout = (req, res) => {
 };
 
 module.exports = {
-    confirmEmail,
-    register,
     login,
-    logout
+    logout,
+    register,
+    confirmEmail,
+    resendConfirmation
 };
