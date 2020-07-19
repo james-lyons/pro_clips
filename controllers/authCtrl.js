@@ -11,15 +11,12 @@ const { sendEmailVerification } = require('../middleware/sendEmail');
 const confirmEmail = async (req, res) => {
     try {
         const { userId } = JWT.verify(req.params.confirmToken, process.env.EMAIL_SECRET);
-        console.log('Hello from confirmEmail', userId)
 
         await db.User.findByIdAndUpdate(userId, { isConfirmed: true }, (error, updatedUser) => {
             if (error) return res.status(500).json({
                 status: 500,
                 error
             });
-
-            console.log('Hello from confirmEmail', updatedUser);
 
             return res.status(201).json({
                 status: 201,
@@ -39,8 +36,6 @@ const resendConfirmation = (req, res) => {
             status: 500,
             error
         });
-
-        console.log('Hello from resendConfirmEmail', foundUser);
 
         if (!foundUser) {
             return res.status(404).json({
