@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 
 const sendEmailVerification = async (user) => {
     const emailToken = await jwt.sign({ userId: user._id }, process.env.EMAIL_SECRET, { expiresIn: '1d' });
-    const url = `htts://proclips.io/register/confirm?emailtoken=${ emailToken }`;
+    const url = `https://proclips.io/register/confirm?emailtoken=${ emailToken }`;
 
     console.log('Hello from EmailVerification: url', url);
 
@@ -53,7 +53,7 @@ const sendPasswordChangeEmail = async (user) => {
     const emailSecret = user.password + '-' + user.createdAt;
     const emailToken = await jwt.sign({ userId: user._id, passhash: user.password }, emailSecret, { expiresIn: '1d' });
 
-    const url = `htts://proclips.io/password/reset/?userid=${ user._id }&token=${ emailToken }`;
+    const url = `https://proclips.io/password/reset/?userid=${ user._id }&token=${ emailToken }`;
     console.log('Hello from sendPasswordChangeEmail: url', url);
 
     const params = {
