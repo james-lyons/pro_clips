@@ -69,7 +69,7 @@ const userSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    isCool: {
+    verified: {
         type: Boolean,
         default: false
     }
