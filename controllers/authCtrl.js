@@ -40,7 +40,7 @@ const resendConfirmation = (req, res) => {
             error
         });
 
-        console.log('Hello from resendConfirmEmail', updatedUser);
+        console.log('Hello from resendConfirmEmail', foundUser);
 
         if (!foundUser) {
             return res.status(404).json({
