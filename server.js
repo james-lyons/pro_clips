@@ -18,6 +18,8 @@ const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
 
+console.log("Hello from SERVER 1: ", process.env);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
