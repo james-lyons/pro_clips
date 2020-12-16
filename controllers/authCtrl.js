@@ -53,6 +53,9 @@ const resendConfirmation = (req, res) => {
 };
 
 const register = (req, res) => {
+
+    console.log("HELLO FROM REGISTER 1: ", req.body);
+
     const { errors, notValid } = validateUser(req.body);
 
     if (notValid) {
@@ -70,11 +73,15 @@ const register = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
+        console.log("HELLO FROM REGISTER 2: ", error);
+
         if (foundUser) return res.status(400).json({
             status: 400,
             error: { message: 'Username or Email already registered' },
             message: 'Please try again.'
         });
+
+        console.log("HELLO FROM REGISTER 3: ", foundUser);
 
         db.User.findOne({ username: req.body.username }, (error, foundUser) => {
             if (error) return res.status(500).json({
@@ -109,6 +116,8 @@ const register = (req, res) => {
                         password: hash,
                         password2: hash
                     };
+
+                    console.log("HELLO FROM REGISTER 4: ", newUser);
     
                     db.User.create(newUser, (error, createdUser) => {
                         if (error) return res.status(500).json({
@@ -117,7 +126,11 @@ const register = (req, res) => {
                             message: 'Something went wrong, please try again.'
                         });
 
+                        console.log("HELLO FROM REGISTER 5: ", createdUser);
+
                         sendEmailVerification(createdUser).catch(console.error);
+
+                        
     
                         return res.status(201).json({
                             status: 201,
@@ -132,6 +145,8 @@ const register = (req, res) => {
 };
 
 const login = (req, res) => {
+    console.log('HELLO FROM LOGIN 1', req.body);
+    
     if (!req.body.email || !req.body.password) {
         return res.status(200).json({
             status: 400,
@@ -147,6 +162,8 @@ const login = (req, res) => {
             message: 'Something went wrong, please try again.'
         });
 
+        console.log('HELLO FROM LOGIN 2:', foundUser);
+
         if (!foundUser) return res.status(400).json({
             status: 400,
             error: { message: 'Email or Password is incorrect' },
@@ -155,7 +172,7 @@ const login = (req, res) => {
 
         if (!foundUser.isConfirmed) return res.status(400).json({
             status: 400,
-            error: { message: 'Please check your inbox and confirm your email' },
+            error: { message: "If you have registered an account and haven't yet verified your email address, please check your inbox and click the link provided." },
             message: 'Please try again.'
         });
 

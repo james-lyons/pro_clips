@@ -128,6 +128,8 @@ const fetchUser = (req, res) => {
 
 const editUserProfile = (req,res) => {
 
+    console.log("Hello from EditUserProfile 1: ", req.body);
+
     db.User.findOne({ username: req.body.username }, (error, foundUser) => {
         if (error) return res.status(500).json({
             status: 500,

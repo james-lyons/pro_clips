@@ -10,6 +10,10 @@ const jwt = require('jsonwebtoken');
 const sendEmailVerification = async (user) => {
     const emailToken = await jwt.sign({ userId: user._id }, process.env.EMAIL_SECRET, { expiresIn: '1d' });
     const url = `https://www.proclips.io/register/confirm?emailtoken=${ emailToken }`;
+    // const url = `http://localhost:8080/register/confirm?emailtoken=${ emailToken }`;
+
+    console.log("HELLO FROM EMAIL VERIFICATION 1: ", emailToken)
+    console.log("HELLO FROM EMAIL VERIFICATION 2: ", url)
 
     const params = {
         Destination: {
@@ -34,6 +38,8 @@ const sendEmailVerification = async (user) => {
             process.env.PROCLIPS_EMAIL
         ],
     };
+
+    console.log("HELLO FROM EMAIL VERIFICATION 3: ", params)
 
     const sendPromise = new AWS.SES({
         region: process.env.AWS_SES_REGION,
