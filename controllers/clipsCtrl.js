@@ -86,7 +86,7 @@ const indexBrowseClips = async (req, res) => {
 
     }).limit(4);
 
-    await db.Clip.find({ "game": "Valorant" }, (error, foundClips) => {
+    await db.Clip.find({ "game": "VALORANT" }, (error, foundClips) => {
         if (error) return res.status(500).json({
             status: 500,
             error,
