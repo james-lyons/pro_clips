@@ -191,20 +191,12 @@ const login = (req, res) => {
                 };
 
                 console.log('HELLO FROM LOGIN 3: ', req.session);
-
-                req.session.save((error) => {
-                    if (error) {
-                        res.end('session save error: ' + error)
-                        return;
-                    } else {
-                        return res.status(200).json({
-                            status: 200,
-                            message: 'Successfully logged in.',
-                            data: foundUser
-                        });
-                    };
+                
+                return res.status(200).json({
+                    status: 200,
+                    message: 'Successfully logged in.',
+                    data: foundUser
                 });
-                return;
 
             } else {
 

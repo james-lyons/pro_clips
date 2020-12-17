@@ -26,7 +26,6 @@ console.log('HELLO FROM SERVER.JS 1: ', process.env);
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    cookie: { secure: false, httpOnly: false },
     saveUninitialized: false
 }));
 
@@ -42,8 +41,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options('https://www.proclips.io', cors());
-
-app.set('trust proxy', 1);
 
 // ------------------------------------- Routes ------------------------------------ //
 
