@@ -42,6 +42,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.options('https://www.proclips.io', cors());
 
+app.set('trust proxy', 1);
+
 // ------------------------------------- Routes ------------------------------------ //
 
 app.get('/', (req, res) => {
