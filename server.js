@@ -14,7 +14,7 @@ const app = express();
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 5000;
 
 // ----------------------------------- Middleware ---------------------------------- //
 
