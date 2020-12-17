@@ -26,6 +26,7 @@ console.log('HELLO FROM SERVER.JS 1: ', process.env);
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
+    cookie:{ httpOnly: false },
     saveUninitialized: false
 }));
 
