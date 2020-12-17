@@ -190,6 +190,12 @@ const login = (req, res) => {
                     profile_image: foundUser.profile_image
                 };
 
+                req.session.save((error) => {
+                    if (error) {
+                        console.log('HELLO FROM LOGIN ERROR: REQ.SESSION.ERROR', error);
+                    };
+                });
+
                 console.log('HELLO FROM LOGIN 3: ', req.session);
                 
                 return res.status(200).json({
@@ -207,6 +213,8 @@ const login = (req, res) => {
                 });
             };
         });
+        console.log('HELLO FROM LOGIN 4:', req.session);
+        return;
     });
 };
 
