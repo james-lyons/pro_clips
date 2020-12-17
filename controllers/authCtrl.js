@@ -190,6 +190,8 @@ const login = (req, res) => {
                     profile_image: foundUser.profile_image
                 };
 
+                console.log('HELLO FROM LOGIN 3: ', req.session);
+
                 return res.status(200).json({
                     status: 200,
                     message: 'Successfully logged in.',

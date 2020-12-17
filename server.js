@@ -16,15 +16,12 @@ const app = express();
 const routes = require('./routes');
 const PORT = process.env.PORT || 4000;
 
-// process.env.PORT ||
-
 // ----------------------------------- Middleware ---------------------------------- //
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-console.log('HELLO FROM SERVER.JS 1: ', process.env.MONGODB_URL);
-console.log('HELLO FROM SERVER.JS 2: ', process.env);
+console.log('HELLO FROM SERVER.JS 1: ', process.env);
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
