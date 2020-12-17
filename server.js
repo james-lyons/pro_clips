@@ -18,12 +18,12 @@ const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
 
-app.enable('trust proxy')
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 console.log('HELLO FROM SERVER.JS 1: ', process.env);
+
+app.set('trust proxy', 1)
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
