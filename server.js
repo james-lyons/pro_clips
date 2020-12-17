@@ -14,6 +14,7 @@ const app = express();
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
+const { none } = require('./middleware/multer');
 const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
@@ -23,13 +24,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 console.log('HELLO FROM SERVER.JS 1: ', process.env);
 
-app.set("trust proxy", 1);
-
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    proxy: true,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: { sameSite: none }
 }));
 
 // https://www.proclips.io
