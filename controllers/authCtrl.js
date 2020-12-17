@@ -194,9 +194,11 @@ const login = (req, res) => {
                     if (error) {
                         console.log('HELLO FROM LOGIN ERROR: REQ.SESSION.ERROR', error);
                     };
+
+                    console.log('HELLO FROM LOGIN 3: ', req.session);
                 });
 
-                console.log('HELLO FROM LOGIN 3: ', req.session);
+                console.log('HELLO FROM LOGIN 4: ', req.session);
                 
                 return res.status(200).json({
                     status: 200,
@@ -213,8 +215,8 @@ const login = (req, res) => {
                 });
             };
         });
-        console.log('HELLO FROM LOGIN 4:', req.session);
-        return;
+        
+        return console.log('HELLO FROM LOGIN 5:', req.session);
     });
 };
 
