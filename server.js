@@ -16,9 +16,9 @@ const app = express();
 const routes = require('./routes');
 const PORT = process.env.PORT || 4000;
 
-// ----------------------------------- Middleware ---------------------------------- //
+// process.env.PORT ||
 
-console.log("Hello from SERVER 1: ", process.env);
+// ----------------------------------- Middleware ---------------------------------- //
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,18 +29,18 @@ app.use(session({
     saveUninitialized: false
 }));
 
+// https://www.proclips.io/
+
 const corsOptions = {
-    origin: 'https://www.proclips.io',
+    origin: 'https://www.proclips.io/',
     methods: ['GET', 'PUT', 'POST', 'HEAD', 'DELETE', 'OPTIONS'],
     headers: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
     credentials: true,
     optionsSuccessStatus: 200
 };
 
-// https://www.proclips.io
-
 app.use(cors(corsOptions));
-app.options('https://www.proclips.io', cors());
+app.options('https://www.proclips.io/', cors());
 
 // ------------------------------------- Routes ------------------------------------ //
 

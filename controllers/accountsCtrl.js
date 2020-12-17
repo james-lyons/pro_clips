@@ -129,6 +129,7 @@ const fetchUser = (req, res) => {
 const editUserProfile = (req,res) => {
 
     console.log("Hello from EditUserProfile 1: ", req.body);
+    console.log("Hello from EditUserProfile 2: ", req.session);
 
     db.User.findOne({ username: req.body.username }, (error, foundUser) => {
         if (error) return res.status(500).json({

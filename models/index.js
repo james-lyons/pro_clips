@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const MONGODB_URI =  process.env.MONGODB_URL || 'mongodb://localhost:27017/pro-clips'
+const MONGODB_URI = process.env.MONGODB_URL || 'mongodb://localhost:27017/pro-clips'
 
 // process.env.MONGODB_URL ||
 
