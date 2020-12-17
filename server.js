@@ -28,7 +28,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { sameSite: none }
+    cookie: { sameSite: 'none' }
 }));
 
 // https://www.proclips.io
