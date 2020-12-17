@@ -23,8 +23,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 console.log('HELLO FROM SERVER.JS 1: ', process.env);
 
+app.set("trust proxy", 1);
+
 app.use(session({
     secret: process.env.SESSION_SECRET,
+    proxy: true,
     resave: false,
     saveUninitialized: false
 }));
