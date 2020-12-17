@@ -14,10 +14,11 @@ const app = express();
 // ------------------------- State Configuration Variables ------------------------- //
 
 const routes = require('./routes');
-const { none } = require('./middleware/multer');
 const PORT = process.env.PORT || 4000;
 
 // ----------------------------------- Middleware ---------------------------------- //
+
+app.enable('trust proxy')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
