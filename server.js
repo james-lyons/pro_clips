@@ -23,7 +23,7 @@ const PORT = process.env.PORT || 4000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-console.log('HELLO FROM SERVER.JS 1: ', process.env.SESSION_SECRET);
+console.log('HELLO FROM SERVER.JS 1: ', process.env.MONGODB_URL);
 console.log('HELLO FROM SERVER.JS 2: ', process.env);
 
 app.use(session({
